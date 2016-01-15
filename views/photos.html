@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="container">
+  <h2>Photos Index</h2>
+  <form id="fileUpload" method="post" action="/photos/upload"
+  enctype="multipart/form-data">
+    <label for="photoload">Select a file to upload:</label><br>
+    <input type="file" id="photoload" name="photoFile" accept="photo/*">
+    <br>
+    <br>
+    <button id="upload">Upload</button>
+  </form>
+</div>
+
+{% endblock %}
