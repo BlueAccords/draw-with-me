@@ -28,7 +28,9 @@ A web app that allows creations of public and private rooms where you can upload
   * messages
     * author
     * body
-    * timestamp  
+    * timestamp
+* Location
+* Time zone
 
 #### Rooms
 * collections

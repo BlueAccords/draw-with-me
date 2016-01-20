@@ -2,67 +2,54 @@ var express = require('express');
 var router = express.Router();
 var util = require('util');
 var fs = require('fs');
-// formidable used to handle file uploads.
 // http > https://nodejs.org/api/http.html
 // util > https://nodejs.org/api/util.html
-var formidable = require('formidable');
 var path = require('path');
+var multer = require('multer');
+
+// storage
+var storage = multer.diskStorage({
+  destination: function(req, file, callback){
+    callback(null, './uploads');
+  },
+  filename: function(req, file, callback){
+    callback(null, Date.now() + '-' + file.fieldname);
+  }
+});
+
+var limits = {
+  fields: 1,
+  // limit file upload to 10mb
+  fileSize: 1024 * 1024,
+  // limit number of file fields
+  files: 10,
+};
+
+// TODO: ADD FILE FILTER function(see multer readme)
+// check filetype before upload.
+// https://github.com/expressjs/multer/issues/186
+
+var multerOptions = {
+  storage: storage,
+  limits: limits,
+};
+
+// multer upload
+var upload = multer({ storage : storage}).array('photoFile', 2);
 
 // routes
 router.get('/', function(req, res){
   res.render('photos', {title: 'Draw With Me - Photos'});
 });
 
-router.post('/upload', function(req, res, next){
-  var form = new formidable.IncomingForm();
-
-  // parse the form.
-  form.parse(req, function(err, fields, files){
-    // 'file' = name of the input field's type file
-    console.log(files);
-    res.writeHead(200, {'content-type': 'text/plain'});
-    res.write('received upload:\n\n');
-    res.end(util.inspect({fields: fields, files: files}));
-  });
-
-  // error handling
-  form.on('error', function(err){
-    console.error(err);
-  });
-
-  // display progress to console.
-  form.on('progress', function(bytesReceived, bytesExpected){
-    var percentComplete = (bytesReceived / bytesExpected) * 100;
-    console.log(percentComplete.toFixed(2));
-  });
-
-  // file upload complete handling
-  form.on('end', function(fields, files){
-    // location of temporary uploaded file.
-    var temp_path = this.openedFiles[0].path;
-    // the file name of the uploaded file.
-    var file_name = this.openedFiles[0].name;
-    // Location where we'll copy the uploaded file.
-    var new_location = 'public/images';
-
-    fs.copy(temp_path, new_location + file_name, function(err){
-      if(err) {
-        console.error(err);
-      } else {
-        console.log("success");
-      }
-    });
-    // fs.readFile(temp_path, function(err, data){
-    //   fs.writeFile(new_location + file_name, data, function(err){
-    //     fs.unlink(temp_path, function(err){
-    //       if(err){
-    //         console.log(err);
-    //       } else {
-    //         console.log("File successfully uploaded");
-    //       }
-    //     });
-    //   });
-    // });
+router.post('/upload', function(req, res){
+  upload(req, res, function(err){
+    console.log(req.body);
+    console.log(req.files);
+    if(err){
+      return res.end('Error uploading File.');
+    }
+    res.end('File successfully uploaded');
   });
 });
 
