@@ -35,7 +35,7 @@ var multerOptions = {
 };
 
 // multer upload
-var upload = multer({ storage : storage}).array('photoFile', 2);
+var upload = multer(multerOptions).array('photoFile', 2);
 
 // routes
 router.get('/', function(req, res){
