@@ -4,6 +4,7 @@ var router = express.Router();
 // mongoose/user model connection
 var mongoose = require('mongoose');
 var User = mongoose.model('user');
+var bcrypt = require('bcryptjs');
 
 router.get('/register', function(req, res){
   res.render('register');
@@ -13,10 +14,13 @@ router.get('/register', function(req, res){
 // creations a user from form data and
 // attempts to save info to mongodb
 router.post('/register', function(req, res){
+  var salt = bcrypt.genSaltSync(10);
+  var hash = bcrypt.hashSync(req.body.password, salt);
+
   var user = new User({
     username: req.body.username,
     email: req.body.email,
-    password: req.body.password
+    password: hash,
   });
 
   user.save(function(err, savedUser){
@@ -43,10 +47,8 @@ router.post('/login', function(req, res){
       if(!user){
         res.render('login', { error: "Invalid Email/Password"});
       } else {
-        if(req.body.password === user.password){
-          console.log("user > " + user);
+        if(bcrypt.compareSync(req.body.password, user.password)){
           req.session.user = user; // set cookie: session={email, password, ...}
-          console.log('session cookie' + req.session.user);
           res.redirect('dashboard');
         } else {
           res.render('login', { error: "Invalid Email/Password"});
@@ -72,7 +74,7 @@ router.get('/dashboard', function checkValidSession(req, res){
 });
 
 router.get('/logout', function(req, res){
-  req.session.reset(); 
+  req.session.reset();
   res.redirect('/');
 });
 

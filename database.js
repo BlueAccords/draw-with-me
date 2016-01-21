@@ -3,6 +3,8 @@ var Schema	 = mongoose.Schema;
 
 var ObjectId = Schema.ObjectId;
 
+// TODO: MIGRATE DATABASE TO ACTUAL ONE LATER
+// MODIFY MODELS TO FIX SPECS.
 var User = new Schema({
   id: ObjectId,
   username: { type: String, unique: true},
