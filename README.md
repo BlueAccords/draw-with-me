@@ -9,6 +9,10 @@ A web app that allows creations of public and private rooms where you can upload
     * ~~Basic image uploading~~
     * Restrict image filetype
 * User Authentication
+  * ~~User Registration~~
+  * ~~User Sessions~~
+  * ~~CSRF protection for login/register forms~~
+  * ~~Basic User Dashboard~~
   * OAuth through google, reddit, github.
 * User Authorization
 * Room creation
