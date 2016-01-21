@@ -10,9 +10,21 @@ router.get('/register', function(req, res){
   res.render('register');
 });
 
+// middleware function to authenticate session data.
+//
+function requireLogin(req, res, next){
+  if(!req.user){
+    res.redirect('login');
+  } else {
+    next();
+  }
+}
+
 // registration
 // creations a user from form data and
 // attempts to save info to mongodb
+// TODO: LOOk INTO MORE OPTIONS(MORE CYCLES?)
+// LONGER SALT?
 router.post('/register', function(req, res){
   var salt = bcrypt.genSaltSync(10);
   var hash = bcrypt.hashSync(req.body.password, salt);
@@ -37,10 +49,12 @@ router.post('/register', function(req, res){
   });
 });
 
+// login page
 router.get('/login', function(req, res){
   res.render('login');
 });
 
+// post login info
 router.post('/login', function(req, res){
   User.findOne({ email: req.body.email},
     function checkValidUser(err, user){
@@ -49,6 +63,7 @@ router.post('/login', function(req, res){
       } else {
         if(bcrypt.compareSync(req.body.password, user.password)){
           req.session.user = user; // set cookie: session={email, password, ...}
+          console.log("Login Successful?");
           res.redirect('dashboard');
         } else {
           res.render('login', { error: "Invalid Email/Password"});
@@ -57,20 +72,10 @@ router.post('/login', function(req, res){
     });
 });
 
-router.get('/dashboard', function checkValidSession(req, res){
-  if(req.session && req.session.user){
-    User.findOne({email: req.session.user.email }, function(err, user){
-      if(!user) {
-        req.session.reset();
-        req.redirect('/login');
-      } else {
-        res.locals.user = user;
-        res.render('dashboard');
-      }
-    });
-  } else {
-    res.redirect('login');
-  }
+// runs requireLogin which will either go to the next middleware or
+// allower the user to access the dashboard.
+router.get('/dashboard', requireLogin, function checkValidSession(req, res){
+    res.render('dashboard');
 });
 
 router.get('/logout', function(req, res){
@@ -78,5 +83,8 @@ router.get('/logout', function(req, res){
   res.redirect('/');
 });
 
+router.get('profile', function(req, res){
+  res.send('aaaprofile');
+});
 
 module.exports = router;

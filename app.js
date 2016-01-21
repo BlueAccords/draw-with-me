@@ -15,7 +15,7 @@ var users = require('./routes/users');
 var photos = require('./routes/photos');
 var mongoose = require('mongoose');
 var sessions = require('client-sessions');
-
+var User = mongoose.model('user');
 var app = express();
 
 // nunjucks config
@@ -45,6 +45,27 @@ app.use(sessions({
   // session extension time is 1 hour.
   activeDuration: 1000 * 60 * 60,
 }));
+
+// middleware function to check if user session data exists.
+// if it does exist then find the user for the matching data.
+// if matching user is found in the db then set local user info
+// in the cookies for the user.
+// else if no user found matching then continue with next();
+app.use(function(req, res, next){
+  if( req.session && req.session.user){
+    User.findOne({ email: req.session.user.email }, function(err, user){
+      if(user){
+          req.user = user;
+          delete req.user.password;
+          req.session.user = req.user;
+          res.locals.user = req.user;
+      }
+      next();
+    });
+  } else {
+    next();
+  }
+});
 
 app.use('/', routes);
 app.use('/photos', photos);
