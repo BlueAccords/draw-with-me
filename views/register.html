@@ -3,6 +3,7 @@
 {% block content %}
 <h1>Create an account</h1>
 <form action="/register" method="post">
+  <input type="hidden", name="_csrf", value="{{csrfToken}}">
   <label for="username">Username</label>
   <input id="username" type="text" name="username", required=true>
   <br>

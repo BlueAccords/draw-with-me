@@ -1,3 +1,5 @@
+// TODO: REFACTOR THIS ROUTE BETTER.
+// TODO: passport or drywall(skeleton of passport)
 var express = require('express');
 var router = express.Router();
 
@@ -6,8 +8,9 @@ var mongoose = require('mongoose');
 var User = mongoose.model('user');
 var bcrypt = require('bcryptjs');
 
+// CSRF token passed into template.
 router.get('/register', function(req, res){
-  res.render('register');
+  res.render('register', { csrfToken: req.csrfToken()});
 });
 
 // middleware function to authenticate session data.
@@ -51,7 +54,7 @@ router.post('/register', function(req, res){
 
 // login page
 router.get('/login', function(req, res){
-  res.render('login');
+  res.render('login', {csrfToken: req.csrfToken()});
 });
 
 // post login info
@@ -73,7 +76,7 @@ router.post('/login', function(req, res){
 });
 
 // runs requireLogin which will either go to the next middleware or
-// allower the user to access the dashboard.
+// allower the user to access the dashboard
 router.get('/dashboard', requireLogin, function checkValidSession(req, res){
     res.render('dashboard');
 });
