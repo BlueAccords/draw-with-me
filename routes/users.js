@@ -5,6 +5,10 @@ router.get('/register', function(req, res){
   res.render('register');
 });
 
+router.post('/register', function(req, res){
+  res.json(req.body);
+});
+
 router.get('/login', function(req, res){
   res.render('login');
 });
