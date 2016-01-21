@@ -5,6 +5,9 @@ A web app that allows creations of public and private rooms where you can upload
 ## TODO
 --------
 * CRUD(Create, Read, Update, Delete) of images to the database
+  * Image uploading
+    * ~~Basic image uploading~~
+    * Restrict image filetype
 * User Authentication
   * OAuth through google, reddit, github.
 * User Authorization
