@@ -1,3 +1,5 @@
+require('./database');
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -11,7 +13,7 @@ var nunjucks = require('nunjucks');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var photos = require('./routes/photos');
-
+var mongoose = require('mongoose');
 var app = express();
 
 // nunjucks config
