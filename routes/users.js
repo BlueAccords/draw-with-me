@@ -9,6 +9,9 @@ router.get('/register', function(req, res){
   res.render('register');
 });
 
+// registration
+// creations a user from form data and
+// attempts to save info to mongodb
 router.post('/register', function(req, res){
   var user = new User({
     username: req.body.username,
@@ -34,11 +37,42 @@ router.get('/login', function(req, res){
   res.render('login');
 });
 
-router.get('/dashboard', function(req, res){
-  res.render('dashboard');
+router.post('/login', function(req, res){
+  User.findOne({ email: req.body.email},
+    function checkValidUser(err, user){
+      if(!user){
+        res.render('login', { error: "Invalid Email/Password"});
+      } else {
+        if(req.body.password === user.password){
+          console.log("user > " + user);
+          req.session.user = user; // set cookie: session={email, password, ...}
+          console.log('session cookie' + req.session.user);
+          res.redirect('dashboard');
+        } else {
+          res.render('login', { error: "Invalid Email/Password"});
+        }
+      }
+    });
+});
+
+router.get('/dashboard', function checkValidSession(req, res){
+  if(req.session && req.session.user){
+    User.findOne({email: req.session.user.email }, function(err, user){
+      if(!user) {
+        req.session.reset();
+        req.redirect('/login');
+      } else {
+        res.locals.user = user;
+        res.render('dashboard');
+      }
+    });
+  } else {
+    res.redirect('login');
+  }
 });
 
 router.get('/logout', function(req, res){
+  req.session.reset(); 
   res.redirect('/');
 });
 
