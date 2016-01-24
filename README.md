@@ -21,7 +21,13 @@ A web app that allows creations of public and private rooms where you can upload
   * Generate private room keys
   * Room authorization restrictions
 
-## CRUD, Schema Design
+## CRUD, Schema Design  
+### Misc Notes
+  When updating the schema you can either make it so  
+
+  * the older documents are updated as you go along.(via a method in the update requests).
+  * Write a script that converts all the old documents into the newer one.
+  * In development you probably just scrap the table entirely multiple times.
 #### Users
 * username
 * password
@@ -32,12 +38,16 @@ A web app that allows creations of public and private rooms where you can upload
   * images
 * friends
 * inbox
-  * messages
-    * author
-    * body
-    * timestamp
+  * messsages
 * Location
 * Time zone
+
+#### Messsages
+* author
+* recipient
+* title
+* body
+* date
 
 #### Rooms
 * collections
@@ -50,13 +60,15 @@ A web app that allows creations of public and private rooms where you can upload
   * rank
     * permission levels to edit room
 * events
-  * allows scheduling of events
-  * Ability to send out emails to members
+    * public/private
+    * title
+    * Body
+    * Date
 * public/private
-  * public allows public to view or public to contribute to.
-  * owner can choose to authorize image uploads or not.
-  * keys/passwords to join if private
-  * link to room(allow custom slugs)  
+    * public allows public to view or public to contribute to.
+    * owner can choose to authorize image uploads or not.
+    * keys/passwords to join if private
+    * link to room(allow custom slugs)  
 
 ### Images
 * filename
@@ -67,3 +79,7 @@ A web app that allows creations of public and private rooms where you can upload
 * date
 * author  
 * tags(important)
+
+### Tags
+* name
+* description
