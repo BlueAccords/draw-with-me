@@ -3,6 +3,9 @@ var Schema	 = mongoose.Schema;
 
 var ObjectId = Schema.ObjectId;
 
+var exports = module.exports;
+var bcrypt = require('bcryptjs');
+
 mongoose.connect('mongodb://localhost/test-auth');
 
 // TODO: MIGRATE DATABASE TO ACTUAL ONE LATER
@@ -63,8 +66,41 @@ var User = mongoose.model('user', UserSchema);
 var Room = mongoose.model('room', RoomSchema);
 var Photo = mongoose.model('photo', PhotoSchema);
 
-module.exports = {
-  user: User,
-  room: Room,
-  photo: Photo,
+exports.createUser = function(obj){
+  var salt = bcrypt.genSaltSync(10);
+  var hash = bcrypt.hashSync(obj.password, salt);
+
+  var user = new User({
+    username: obj.username,
+    email: obj.email,
+    password: hash,
+  });
+
+  return user.save(function(err, savedUser){
+    console.log(savedUser);
+    if(err){
+      var error = 'Something bad happened. Try again!';
+      if(err.code === 11000){
+        error = 'Email is already in use. Please try another';
+      }
+      //res.render('register', {error: error});
+      console.log('error', {error: error});
+    } else {
+      console.log('Succesfully created user');
+      console.log(
+        {
+          username: user.username,
+          email: user.email,
+          password: user.password
+        });
+        return true;
+    }
+
+  });
 };
+
+// module.exports = {
+//   user: User,
+//   room: Room,
+//   photo: Photo,
+// };

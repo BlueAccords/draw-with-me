@@ -1,4 +1,4 @@
-require('./database');
+var db = require('./database');
 
 var express = require('express');
 var path = require('path');
@@ -49,7 +49,7 @@ app.use(sessions({
   httpOnly: true, // Do not let javascript access cookies.
   secure: true, // this setting forces cookies to only be used over https
   //deletes cookies on browser close.
-  //ephemeral: true,  
+  //ephemeral: true,
 }));
 
 //must be set AFTER use seesions and cookieparser

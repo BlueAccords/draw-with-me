@@ -5,7 +5,8 @@ var router = express.Router();
 
 // mongoose/user model connection
 var mongoose = require('mongoose');
-var User = mongoose.model('user');
+// var User = mongoose.model('user');
+var db = require('../database');
 var bcrypt = require('bcryptjs');
 
 // CSRF token passed into template.
@@ -29,27 +30,35 @@ function requireLogin(req, res, next){
 // TODO: LOOk INTO MORE OPTIONS(MORE CYCLES?)
 // LONGER SALT?
 router.post('/register', function(req, res){
-  var salt = bcrypt.genSaltSync(10);
-  var hash = bcrypt.hashSync(req.body.password, salt);
-
-  var user = new User({
-    username: req.body.username,
-    email: req.body.email,
-    password: hash,
-  });
-
-  user.save(function(err, savedUser){
-    console.log(savedUser);
+  db.createUser(req.body).then(function(user, err){
     if(err){
-      var error = 'Something bad happened. Try again!';
-      if(err.code === 11000){
-        error = 'Email is already in use. Please try another';
-      }
-      res.render('register', {error: error});
+      console.log(err);
+      res.status(406);
     } else {
-      res.redirect('/dashboard');
+      res.status(200);
     }
   });
+  // var salt = bcrypt.genSaltSync(10);
+  // var hash = bcrypt.hashSync(req.body.password, salt);
+  //
+  // var user = new User({
+  //   username: req.body.username,
+  //   email: req.body.email,
+  //   password: hash,
+  // });
+  //
+  // user.save(function(err, savedUser){
+  //   console.log(savedUser);
+  //   if(err){
+  //     var error = 'Something bad happened. Try again!';
+  //     if(err.code === 11000){
+  //       error = 'Email is already in use. Please try another';
+  //     }
+  //     res.render('register', {error: error});
+  //   } else {
+  //     res.redirect('/dashboard');
+  //   }
+  // });
 });
 
 // login page
