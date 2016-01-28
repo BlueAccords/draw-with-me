@@ -2,6 +2,9 @@
 
 {% block content %}
 <h1>Create an account</h1>
+{% if message.length > 0 %}
+<p>{{ message }}</p>
+{% endif %}
 <form action="/register" method="post">
   <label for="username">Username</label>
   <input id="username" type="text" name="username", required=true>
