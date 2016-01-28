@@ -11,16 +11,17 @@ var bodyParser = require('body-parser');
 var nunjucks = require('nunjucks');
 var session       = require('express-session');
 
+// db connection
 var configDB = ('./config/database');
+mongoose.connect('mongodb://localhost/test-auth');
 
 // routes
 var routes = require('./routes/index');
-var users = require('./routes/users');
+//var users = require('./routes/users');
 var photos = require('./routes/photos');
 
 
 // middleware configuration
-mongoose.connect(configDB.url);
 
 require('./config/passport')(passport);
 
@@ -61,7 +62,7 @@ app.use(flash());
 // =================================================================
 app.use('/', routes);
 app.use('/photos', photos);
-require(users)(app, passport);
+require('./routes/users.js')(app, passport);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
