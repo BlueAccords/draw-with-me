@@ -8,7 +8,7 @@ A web app that allows creations of public and private rooms where you can upload
   * Image uploading
     * ~~Basic image uploading~~
     * Restrict image filetype
-* User Authentication
+* ~~User Authentication~~
   * OAuth through google, reddit, github.
 * User Authorization
 * Room creation
@@ -17,6 +17,83 @@ A web app that allows creations of public and private rooms where you can upload
   * Generate private room keys
   * Room authorization restrictions
 
+## ACCESS CONTROL DESIGN
+### Users
+#### Admin
+  * Studios
+    * Create
+    * Read
+    * Update
+    * Delete
+    * Images belonging to studio
+      * Create
+      * Read
+      * Update
+      * Delete
+  * User Accounts
+    * Create
+    * Read
+    * Update
+    * Delete
+  * Collections(Image collections, separate?)
+    * Create
+    * Read
+    * Update
+    * Delete
+  * User Profiles
+    * Delete
+  * Private User Profiles
+    * View(full view)
+    * Delete
+#### Registered User
+  * User profiles
+    * View
+  * Private User Profiles
+    * View(minimal info)
+  * Owned User Profile
+    * Read
+    * Update(profile info)
+    * Delete
+  * Public Studios
+    * Read
+  * Studios owned by User
+    * Read
+    * Update
+    * Delete
+    * Images
+      * Create(Upload)
+      * Read(View)
+      * Update(edit meta info)
+      * Delete
+  * Studios the user belongs to
+    * Read(view)
+    * Images belonging to studio
+      * Read(View)
+    * Images belonging to user
+      * Create(Upload)
+      * Read(view)
+      * Update(edit info)
+      * Delete(Delete own images)
+    * Public Studios(User does not belong to)
+      * View
+      * Images
+        * View
+    * Private Studios
+      * NO ACCESS(view landing page, request invite at most)
+    * Collections(owned)
+      * Create(upload images)
+      * Read
+      * Update
+      * Delete
+#### Unregistered User
+  * Public Studios
+    * Read
+  * Private Studios
+    * NO ACCESS(landing page only)
+  * User Profiles
+    * View
+  * Private User Profiles
+    * View (minmal info)
 ## CRUD, Schema Design
 #### Users
 * username
@@ -34,7 +111,7 @@ A web app that allows creations of public and private rooms where you can upload
     * timestamp
 * Location
 * Time zone
-
+* roles
 #### Rooms
 * collections
   * (group can store images in there)

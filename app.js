@@ -43,6 +43,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// USER ROLE BASED AUTH test-auth
+// TODO: REFACTOR THIS LATER INTO ITS OWN FILE.
+var acl = require('acl');
+
+// using memory backend
+// TODO: REFACTOR TO USE MONGODB BACkEND FOR USER ROLES
+acl = new acl(new acl.memoryBackend());
+
+acl.allow('guest', 'studios', 'view');
+
+acl.allow('registered user', 'studios', ['create','edit', 'view', 'delete']);
+
+acl.allow('admin', 'studios', '*');
+
 // session setup/configuration.
 // TODO: setup mongodb connection(look at express-session docs)
 app.use(session({
