@@ -111,7 +111,9 @@ A web app that allows creations of public and private rooms where you can upload
     * timestamp
 * Location
 * Time zone
-* roles
+* roles  
+
+
 #### Rooms
 * collections
   * (group can store images in there)
