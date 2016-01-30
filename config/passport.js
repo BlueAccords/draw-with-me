@@ -8,6 +8,8 @@ var TwitterStrategy = require('passport-twitter').Strategy;
 var User = require('../models/user');
 
 // export passport as function module
+//TODO: serialize authorization data.
+// unserialize it when session info is needed.
 module.exports = function(passport) {
   // passport session setup.
   // passport serializes user info upon login and creates a cookie
@@ -15,6 +17,7 @@ module.exports = function(passport) {
   // You can set which part of the user info is serialized.
 
   // serialization
+  // saved to session req.session.passport.user
   passport.serializeUser(function(user, done) {
     done(null, user.id);
   });
