@@ -17,9 +17,11 @@ A web app that allows creations of public and private rooms where you can upload
   * Generate private room keys
   * Room authorization restrictions
 
-## ACCESS CONTROL DESIGN
-### Users
-#### Admin
+## ACCESS CONTROL DESIGN  
+
+### Users  
+
+#### Admin  
   * Studios
     * Create
     * Read
@@ -44,7 +46,9 @@ A web app that allows creations of public and private rooms where you can upload
     * Delete
   * Private User Profiles
     * View(full view)
-    * Delete
+    * Delete  
+
+
 #### Registered User
   * User profiles
     * View
@@ -84,7 +88,9 @@ A web app that allows creations of public and private rooms where you can upload
       * Create(upload images)
       * Read
       * Update
-      * Delete
+      * Delete  
+
+
 #### Unregistered User
   * Public Studios
     * Read
@@ -94,7 +100,8 @@ A web app that allows creations of public and private rooms where you can upload
     * View
   * Private User Profiles
     * View (minmal info)
-## CRUD, Schema Design
+## CRUD, Schema Design  
+
 #### Users
 * username
 * password
