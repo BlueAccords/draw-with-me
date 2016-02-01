@@ -5,30 +5,26 @@ var bcrypt   = require('bcryptjs');
 var Schema = mongoose.Schema;
 
 // Studio schema
+// TODO: add slug route based on name. https://github.com/larvit/larvitslugify
 var studioSchema = new Schema({
-  name: { type: String, default: '', trim: true },
-  local             : {
-    username        : String,
-    email           : String,
-    password        : String,
-  },
-  description: { type: String,
+  name               : { type: String, default: '', trim: true },
+  description        : { type: String,
               default: 'A studio for artists to colloaborate together',
-              trim: true
+              trim   : true
             },
-  date_created: {type: Date, default: Date.now()},
-  comments : [{
-    body: { type: String, default: ''},
-    user: { type: Schema.ObjectId, ref: 'User'},
-    date_created: { type: Date, default: Date.now()}
+  date_created       : {type: Date, default: Date.now()},
+  comments           : [{
+    body             : { type: String, default: ''},
+    user             : { type: Schema.ObjectId, ref: 'User'},
+    date_created     : { type: Date, default: Date.now()}
   }],
-  collections       : [{type: Schema.Types.ObjectId, ref: 'Collection'}],
-  owner             : { type: Schema.Types.Object, ref: 'User'},
-  members           : [{
-    user: {type: Schema.Types.ObjectId, ref: 'User'},
-    join_date: {type: Date, default: Date.now()}
+  collections        : [{type: Schema.Types.ObjectId, ref: 'Collection'}],
+  owner              : { type: Schema.Types.Object, ref: 'User'},
+  members            : [{
+    user             : {type: Schema.Types.ObjectId, ref: 'User'},
+    join_date        : {type: Date, default: Date.now()}
   }],
-  private           : {type: Boolean, default: false},
+  private            : {type: Boolean, default: false},
 });
 
 /*
@@ -44,24 +40,25 @@ studioSchema.path('name').required(true, 'Studio room name cannnot be blank');
 */
 studioSchema.pre('remove', function(next) {
   // TODO: delete collections dependent on the studio.
+  // TODO: remove images(once images are implemented) from the studio.
 });
 
 // methods ======================
 
 studioSchema.methods = {
 
-  /* finds article by id.
-  * load article into session/request data.
-  * @param id {ObjectId}
-  * @param cb {Function}
-  */
-  load: function(_id, cb) {
-    this.findOne({_id: _id})
-      .populate('members', 'local.username')
-      // TODO: choose what to populate from collections into article load.
-      // most likely will be...
-      //.populate('collections', '');
-      .exec(cb);
+
+  // Create Studio and save to the db.
+  // TODO: add image uploading capability to the studio creation process.
+  // TODO: automatically create a default collection upon studio creation.
+  // @param images {Object} is currently not used.
+  createAndSave: function(images, cb) {
+    var self = this;
+
+    this.validate(function(err) {
+      if(err) return cb(err);
+      self.save(cb);
+    });
   },
 
   // Add User to members list.
@@ -72,6 +69,28 @@ studioSchema.methods = {
     });
 
     this.save(cb);
+  },
+
+
+
+
+  //TODO: add ability to remove users from studio in studio model.
+};
+
+// static methods
+studioSchema.statics = {
+  /* finds article by id.
+  * load article into session/request data.
+  * @param id {ObjectId}
+  * @param cb {Function}
+  */
+  load: function(id, cb) {
+    this.findOne({_id: id})
+      .populate('members', 'local.username')
+      // TODO: choose what to populate from collections into article load.
+      // most likely will be...
+      //.populate('collections', '');
+      .exec(cb);
   },
 
   /* list members
@@ -90,7 +109,6 @@ studioSchema.methods = {
       .skip(limit * page)
       .exec(cb);
   }
-  //TODO: add ability to remove users from studio in studio model.
 };
 
 
