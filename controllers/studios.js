@@ -83,7 +83,7 @@ exports.create = function(req, res) {
 exports.edit = function(req, res) {
   res.render('studios/edit', {
     title: 'Edit ' + req.studio.title,
-    article: req.studio
+    studio: req.studio
   });
 };
 

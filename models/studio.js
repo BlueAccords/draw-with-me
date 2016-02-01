@@ -79,15 +79,15 @@ studioSchema.methods = {
 
 // static methods
 studioSchema.statics = {
-  /* finds article by id.
-  * load article into session/request data.
+  /* finds studio by id.
+  * load studio into session/request data.
   * @param id {ObjectId}
   * @param cb {Function}
   */
   load: function(id, cb) {
     this.findOne({_id: id})
       .populate('members', 'local.username')
-      // TODO: choose what to populate from collections into article load.
+      // TODO: choose what to populate from collections into studio load.
       // most likely will be...
       //.populate('collections', '');
       .exec(cb);
@@ -102,6 +102,7 @@ studioSchema.statics = {
     var page = options.page || 0;
     var limit = options.limit || 30;
 
+    // FIXME: find out how to populate nested sub documents later.
     this.find(critera)
       .populate('members', 'local.username')
       .sort({'date_created': -1}) // sort by date, oldest to newest.

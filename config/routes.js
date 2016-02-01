@@ -55,6 +55,17 @@ module.exports = function(app, passport) {
   // USER SESSIONS ======================================================
   app.get('/dashboard', loginAuth, users.show);
 
+
+  // STUDIO ROUTES ======================================================
+  app.param('id', studios.load);
+  app.get('/studios', studios.index);
+  app.get('/studios/new', loginAuth, studios.new);
+  app.post('/studios/new', loginAuth, studios.create);
+  app.get('/studios/:id', studios.show);
+  app.get('/studios/:id/edit', loginAuth, studios.edit);
+  app.put('/studios/:id/edit', loginAuth, studios.update);
+  app.delete('/studios/:id/delete', loginAuth, studios.destroy);
+
   // ERROR HANDLING ================================================
 
   app.use(function(req, res, next) {
