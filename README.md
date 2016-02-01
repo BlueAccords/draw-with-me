@@ -41,7 +41,7 @@ You should also try to make your models independent from the outside world. They
     * Read
     * Update
     * Delete
-  * Collections(Image collections, separate?)
+  * galleries(Image galleries, separate?)
     * Create
     * Read
     * Update
@@ -88,7 +88,7 @@ You should also try to make your models independent from the outside world. They
         * View
     * Private Studios
       * NO ACCESS(view landing page, request invite at most)
-    * Collections(owned)
+    * galleries(owned)
       * Create(upload images)
       * Read
       * Update
@@ -112,7 +112,7 @@ You should also try to make your models independent from the outside world. They
 * email
 * rooms they own/created
 * rooms they are members of
-* personal collection
+* personal gallery
   * images
 * friends
 * inbox
@@ -126,7 +126,7 @@ You should also try to make your models independent from the outside world. They
 
 
 #### Rooms
-* collections
+* galleries
   * (group can store images in there)
 * owner
   * transferrable
@@ -144,7 +144,23 @@ You should also try to make your models independent from the outside world. They
   * keys/passwords to join if private
   * link to room(allow custom slugs)  
 
+#### galleries(May not be necessary?)
+A gallery would store a group of images. This may be necessary if Groups
+want to sort their images by events(one gallery per event and such). but
+for a MVP(Minimum viable product) this may not be necessary.  
+
+* Name
+* Images
+* Description
+* Date Created
+* Date Last Accessed(?)
+
 ### Images
+A singular image with all the meta data needed.
+These will probably be stored via CDN with a link pointing to the CDN
+rather than storing them on the server itself. May be unnecessary to have
+as a separate schema if I can just store them in the galleries gallery.
+
 * filename
 * file size
   * limit file size(need to think of a max size)

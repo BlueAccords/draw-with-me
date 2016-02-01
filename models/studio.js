@@ -20,11 +20,14 @@ var studioSchema = new Schema({
   comments : [{
     body: { type: String, default: ''},
     user: { type: Schema.ObjectId, ref: 'User'},
-    date_created: { type: Date, default: Date.non}
+    date_created: { type: Date, default: Date.now()}
   }],
   collections       : [{type: Schema.Types.ObjectId, ref: 'Collection'}],
   owner             : { type: Schema.Types.Object, ref: 'User'},
-  members           : [{type: Schema.Types.ObjectId, ref: 'User'}],
+  members           : [{
+    user: {type: Schema.Types.ObjectId, ref: 'User'},
+    join_date: {type: Date, default: Date.now()}
+  }],
   private           : {type: Boolean, default: false},
 });
 
@@ -41,18 +44,53 @@ studioSchema.path('name').required(true, 'Studio room name cannnot be blank');
 */
 studioSchema.pre('remove', function(next) {
   // TODO: delete collections dependent on the studio.
-  console.log("TODO: delete dependent collections.");
 });
 
 // methods ======================
 
 studioSchema.methods = {
 
-  /*
-  * Save Studio object.
-  *
+  /* finds article by id.
+  * load article into session/request data.
+  * @param id {ObjectId}
   *
   */
+  load: function(_id) {
+    return this.findOne({_id: _id})
+      .populate('members', 'local.username')
+      // TODO: choose what to populate from collections into article load.
+      // most likely will be...
+      //.populate('collections', '');
+      .exec();
+  },
+
+  // Add User to members list.
+  addUser: function(user) {
+    this.members.push({
+      user: user._id,
+      date: Date.now()
+    });
+
+    return this.save();
+  },
+
+  // list members
+  // * @param {Object} options
+  listMembers: function(options) {
+    var critera = options.critera || {};
+    var page = options.page || 0;
+    var limit = options.limit || 30;
+    return this.find(critera)
+      .populate('members', 'local.username')
+      .sort({'date_created': -1}) // sort by date, oldest to newest.
+      .limit(limit)
+      .skip(limit * page)
+      .exec();
+  }
+  // Remove User from members list
+  // removeUser: function(user) {
+  //
+  // }
 };
 
 

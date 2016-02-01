@@ -39,6 +39,7 @@ module.exports = function(app, passport) {
       })
     );
 
+  // login
   app.route('/login')
     .get(users.login)
     .post(passport.authenticate('local-login', {
@@ -48,7 +49,7 @@ module.exports = function(app, passport) {
       })
     );
 
-  // lOGOUT =============================================================
+  // LOGOUT =============================================================
   app.get('/logout', users.logout);
 
   // USER SESSIONS ======================================================

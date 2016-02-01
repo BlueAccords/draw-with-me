@@ -1,9 +1,9 @@
 // load required libraries.
 var mongoose = require('mongoose');
 var bcrypt   = require('bcryptjs');
-
+var Schema = mongoose.Schema;
 // User Schema
-var userSchema = new mongoose.Schema({
+var userSchema = new Schema({
   local             : {
     username        : String,
     email           : String,
