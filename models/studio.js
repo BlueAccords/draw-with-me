@@ -2,45 +2,59 @@
 var mongoose = require('mongoose');
 var bcrypt   = require('bcryptjs');
 
-// User Schema
-var userSchema = new mongoose.Schema({
+var Schema = mongoose.Schema;
+
+// Studio schema
+var studioSchema = new Schema({
+  name: { type: String, default: '', trim: true },
   local             : {
     username        : String,
     email           : String,
     password        : String,
   },
-  facebook          : {
-    id              : String,
-    token           : String,
-    email           : String,
-    name            : String,
-  },
-  twitter           : {
-    id              : String,
-    token           : String,
-    displayName     : String,
-    username        : String,
-  },
-  google            : {
-    id              : String,
-    token           : String,
-    email           : String,
-    name            : String,
-  }
+  description: { type: String,
+              default: 'A studio for artists to colloaborate together',
+              trim: true
+            },
+  date_created: {type: Date, default: Date.now()},
+  comments : [{
+    body: { type: String, default: ''},
+    user: { type: Schema.ObjectId, ref: 'User'},
+    date_created: { type: Date, default: Date.non}
+  }],
+  collections       : [{type: Schema.Types.ObjectId, ref: 'Collection'}],
+  owner             : { type: Schema.Types.Object, ref: 'User'},
+  members           : [{type: Schema.Types.ObjectId, ref: 'User'}],
+  private           : {type: Boolean, default: false},
+});
+
+/*
+* Validations ===========================================================
+*/
+
+studioSchema.path('name').required(true, 'Studio room name cannnot be blank');
+
+/*
+* Pre Hooks
+* Functions to be ran BEFORE a certain action is taken.
+* i.e before removing, saving creating, ect.
+*/
+studioSchema.pre('remove', function(next) {
+  // TODO: delete collections dependent on the studio.
+  console.log("TODO: delete dependent collections.");
 });
 
 // methods ======================
-// genereate hash
-userSchema.methods.generateHash = function(password) {
-  return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-};
 
-// validate password
-userSchema.methods.validPassword = function(password) {
-  return bcrypt.compareSync(password, this.local.password);
-};
+studioSchema.methods = {
 
+  /*
+  * Save Studio object.
+  *
+  *
+  */
+};
 
 
 // create model for users via mongoose.
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('Studio', userSchema);

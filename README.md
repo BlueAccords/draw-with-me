@@ -2,6 +2,10 @@ Draw With Me
 ======
 A web app that allows creations of public and private rooms where you can upload art.  
 
+## Misc Notes
+You should also try to make your models independent from the outside world. They don’t need to know about other models and they should never include them. They don’t need to know about controllers or who uses them. They should never receive request or response objects. They should never return http errors, but they should return model specific errors.
+
+
 ## TODO
 --------
 * CRUD(Create, Read, Update, Delete) of images to the database

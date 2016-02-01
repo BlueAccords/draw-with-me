@@ -43,20 +43,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// USER ROLE BASED AUTH test-auth
-// TODO: REFACTOR THIS LATER INTO ITS OWN FILE.
-var acl = require('acl');
-
-// using memory backend
-// TODO: REFACTOR TO USE MONGODB BACkEND FOR USER ROLES
-acl = new acl(new acl.memoryBackend());
-
-acl.allow('guest', 'studios', 'view');
-
-acl.allow('registered user', 'studios', ['create','edit', 'view', 'delete']);
-
-acl.allow('admin', 'studios', '*');
-
 // session setup/configuration.
 // TODO: setup mongodb connection(look at express-session docs)
 app.use(session({
@@ -75,40 +61,36 @@ app.use(flash());
 // ===============================================================
 // ROUTES =====================================================
 // =================================================================
-app.use('/', routes);
-app.use('/photos', photos);
+// app.use('/', routes);
+require('./config/routes.js')(app, passport);
+// app.use('/photos', photos);
 require('./routes/users.js')(app, passport);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
 
 // error handlers
 
 // development error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
-  });
-}
-
-// production error handler
-// no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
-});
+// if (app.get('env') === 'development') {
+//   app.use(function(err, req, res, next) {
+//     res.status(err.status || 500);
+//     res.render('error', {
+//       message: err.message,
+//       error: err
+//     });
+//   });
+// }
+//
+// // production error handler
+// // no stacktraces leaked to user
+// app.use(function(err, req, res, next) {
+//   res.status(err.status || 500);
+//   res.render('error', {
+//     message: err.message,
+//     error: {}
+//   });
+// });
 
 // export to bin/www which launches the server.
 module.exports = app;
