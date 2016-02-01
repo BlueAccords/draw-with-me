@@ -17,9 +17,8 @@ var configDB = ('./config/database');
 mongoose.connect('mongodb://localhost/test-auth');
 
 // routes
-var routes = require('./routes/index');
 //var users = require('./routes/users');
-var photos = require('./routes/photos');
+//var photos = require('./routes/photos');
 
 
 // middleware configuration

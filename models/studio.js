@@ -53,15 +53,15 @@ studioSchema.methods = {
   /* finds article by id.
   * load article into session/request data.
   * @param id {ObjectId}
-  *
+  * @param cb {Function}
   */
-  load: function(_id) {
-    return this.findOne({_id: _id})
+  load: function(_id, cb) {
+    this.findOne({_id: _id})
       .populate('members', 'local.username')
       // TODO: choose what to populate from collections into article load.
       // most likely will be...
       //.populate('collections', '');
-      .exec();
+      .exec(cb);
   },
 
   // Add User to members list.
@@ -71,28 +71,28 @@ studioSchema.methods = {
       date: Date.now()
     });
 
-    return this.save();
+    this.save(cb);
   },
 
-  // list members
-  // * @param {Object} options
-  listMembers: function(options) {
+  /* list members
+  * @param {Object} options
+  * @param {Function} cb
+  */
+  list: function(options, cb) {
     var critera = options.critera || {};
     var page = options.page || 0;
     var limit = options.limit || 30;
-    return this.find(critera)
+
+    this.find(critera)
       .populate('members', 'local.username')
       .sort({'date_created': -1}) // sort by date, oldest to newest.
       .limit(limit)
       .skip(limit * page)
-      .exec();
+      .exec(cb);
   }
-  // Remove User from members list
-  // removeUser: function(user) {
-  //
-  // }
+  //TODO: add ability to remove users from studio in studio model.
 };
 
 
 // create model for users via mongoose.
-module.exports = mongoose.model('Studio', userSchema);
+module.exports = mongoose.model('Studio', studioSchema);
