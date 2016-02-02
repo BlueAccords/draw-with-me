@@ -9,8 +9,19 @@ req.query.q => "tobi ferret"
 
 // Load Studio into session/req data.
 exports.load = function(req, res, next, id) {
+  console.log(req.params);
+  console.log(" idddddd ");
+  console.log(id);
+  console.log("help ^?");
   Studio.load(id, function(err, studio) {
-    if(err) return next(err);
+    if(err) {
+      //console.log(err);
+      //return next(err);
+      // FIXME: should redirect to 404 page or something.
+      // though it is a server error that it couldn't cast the id to ObjectId.
+      return res.redirect('/studios/');
+    }
+
     if(!studio) return next(new Error('Studio not found'));
     req.studio = studio;
     next();
@@ -113,6 +124,8 @@ exports.update = function(req, res) {
 
 // show studio
 exports.show = function(req, res) {
+  console.log(req.params);
+  console.log("help ^?");
   res.render('studios/show', {
     title: req.studio.name,
     studio: req.studio
