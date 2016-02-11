@@ -19,7 +19,7 @@ var studioSchema = new Schema({
     date_created     : { type: Date, default: Date.now()}
   }],
   collections        : [{type: Schema.Types.ObjectId, ref: 'Collection'}],
-  owner              : { type: Schema.Types.Object, ref: 'User'},
+  owner              : { type: Schema.Types.ObjectId, ref: 'User'},
   members            : [{
     user             : {type: Schema.Types.ObjectId, ref: 'User'},
     join_date        : {type: Date, default: Date.now()}

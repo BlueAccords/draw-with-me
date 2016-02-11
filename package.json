@@ -16,6 +16,7 @@
     "express-session": "^1.13.0",
     "formidable": "^1.0.17",
     "jade": "~1.11.0",
+    "mongoose": "^4.4.3",
     "morgan": "~1.6.1",
     "multer": "^1.1.0",
     "nunjucks": "^2.3.0",
