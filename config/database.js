@@ -1,7 +1,7 @@
 module.exports = {
   db: {
-    production: 'mongodb://localhost/test-auth',
-    development: 'mongodb://localhost/test-auth',
+    production: 'mongodb://localhost/draw-with-me-production',
+    development: 'mongodb://localhost/draw-with-me-dev',
     test: 'mongodb://localhost/draw-with-me-test'
   }
 };

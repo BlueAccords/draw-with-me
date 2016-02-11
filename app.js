@@ -13,8 +13,8 @@ var session = require('express-session');
 
 // db connection
 // FIXME: calling configDB.url does not work properly and gives and error.
-var configDB = ('./config/database');
-mongoose.connect('mongodb://localhost/test-auth');
+var configDB = require('./config/database');
+mongoose.connect(configDB.db.test);
 
 // routes
 //var users = require('./routes/users');
