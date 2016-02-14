@@ -13,6 +13,7 @@ exports.load = function(req, res, next, id) {
   console.log(" idddddd ");
   console.log(id);
   console.log("help ^?");
+  // FIXME: i have no idea what i was solving here in the studio controller
   Studio.load(id, function(err, studio) {
     if(err) {
       //console.log(err);

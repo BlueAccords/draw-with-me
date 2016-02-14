@@ -15,12 +15,12 @@ var studioSchema = new Schema({
   date_created       : {type: Date, default: Date.now()},
   comments           : [{
     body             : { type: String, default: ''},
-    user             : { type: Schema.ObjectId, ref: 'User'},
+    user             : { type: Schema.Types.ObjectId, ref: 'User'},
     date_created     : { type: Date, default: Date.now()}
   }],
   collections        : [{type: Schema.Types.ObjectId, ref: 'Collection'}],
-  owner              : { type: Schema.Types.ObjectId, ref: 'User'},
-  members            : [{
+  _owner              : { type: Schema.Types.ObjectId, ref: 'User'},
+  _members            : [{
     user             : {type: Schema.Types.ObjectId, ref: 'User'},
     join_date        : {type: Date, default: Date.now()}
   }],
@@ -86,7 +86,7 @@ studioSchema.statics = {
   */
   load: function(id, cb) {
     this.findOne({_id: id})
-      .populate('members', 'local.username')
+      .populate('members owner')
       // TODO: choose what to populate from collections into studio load.
       // most likely will be...
       //.populate('collections', '');
