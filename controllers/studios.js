@@ -16,11 +16,11 @@ exports.load = function(req, res, next, id) {
   // FIXME: i have no idea what i was solving here in the studio controller
   Studio.load(id, function(err, studio) {
     if(err) {
-      //console.log(err);
-      //return next(err);
+      console.log(err);
+      return next(err);
       // FIXME: should redirect to 404 page or something.
       // though it is a server error that it couldn't cast the id to ObjectId.
-      return res.redirect('/studios/');
+      // return res.redirect('/studios');
     }
 
     if(!studio) return next(new Error('Studio not found'));
