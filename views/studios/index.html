@@ -2,7 +2,7 @@
 {% for item in studios %}
 <!-- {{item}} -->
 <br>
-<h2><a href="/studios/{{item._id}}">Name: {{item.name}}</a></h2>
+<h2>Name: <a href="/studios/{{item._id}}">{{item.name}}</a></h2>
 <div class="studio-info">
   <h3>Owner: {{item._owner.local.username}}</h3>
   <!-- <h3>Owner: {{item._owner}}</h3> -->

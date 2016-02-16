@@ -62,16 +62,18 @@ studioSchema.methods = {
   },
 
   // Add User to members list.
-  addUser: function(user) {
-    this.members.push({
-      user: user._id,
-      date: Date.now()
-    });
+  // addUser: function(user) {
+  //   this.members.push({
+  //     user: user._id,
+  //     date: Date.now()
+  //   });
+  //
+  //   this.save(cb);
+  // },
 
-    this.save(cb);
-  },
+  addMember: function(user, cb) {
 
-
+  }
 
 
   //TODO: add ability to remove users from studio in studio model.
