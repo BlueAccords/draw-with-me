@@ -86,7 +86,8 @@ studioSchema.statics = {
   */
   load: function(id, cb) {
     this.findOne({_id: id})
-      .populate('members owner')
+      .populate('_members _owner',
+        'local.username local.email')
       // TODO: choose what to populate from collections into studio load.
       // most likely will be...
       //.populate('collections', '');
@@ -104,7 +105,8 @@ studioSchema.statics = {
 
     // FIXME: find out how to populate nested sub documents later.
     this.find(critera)
-      .populate('members', 'local.username')
+      .populate('_members _owner',
+        'local.username local.email')
       .sort({'date_created': -1}) // sort by date, oldest to newest.
       .limit(limit)
       .skip(limit * page)

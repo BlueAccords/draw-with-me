@@ -42,7 +42,7 @@ exports.index = function(req, res) {
   };
 
   Studio.list(options, function(err, studios) {
-    if(err) return res.render('500');
+    if(err) return res.render('error');
     // .count() gets the number of matching documents.
     Studio.count().exec(function(err, count) {
       res.render('studios/index', {
