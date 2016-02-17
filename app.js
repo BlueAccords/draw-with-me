@@ -12,7 +12,6 @@ var nunjucks = require('nunjucks');
 var session = require('express-session');
 
 // db connection
-// FIXME: calling configDB.url does not work properly and gives and error.
 var configDB = require('./config/database');
 mongoose.connect(configDB.db.test);
 

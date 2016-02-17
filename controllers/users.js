@@ -33,3 +33,19 @@ exports.logout = function(req, res) {
     req.logout();
     res.redirect('/');
 };
+
+
+// *** User joining of studios ***********************************
+
+exports.join = function(req, res) {
+  var studio = req.studio;
+  var user = req.user;
+  console.log(req.article);
+
+  user.joinStudio(studio, function(err) {
+    if(err) return res.render('error');
+    
+    req.flash('success', 'Successfully joined studio');
+    res.redirect('/studios/' + studio.id);
+  })
+};

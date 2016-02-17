@@ -57,14 +57,20 @@ module.exports = function(app, passport) {
 
 
   // STUDIO ROUTES ======================================================
-  app.param('id', studios.load);
-  app.get('/studios', studios.index);
-  app.get('/studios/new', loginAuth, studios.new);
-  app.post('/studios/new', loginAuth, studios.create);
-  app.get('/studios/:id', studios.show);
-  app.get('/studios/:id/edit', loginAuth, studios.edit);
-  app.put('/studios/:id/edit', loginAuth, studios.update);
-  app.delete('/studios/:id/delete', loginAuth, studios.destroy);
+  app.param('studioId', studios.load);
+  app.route('/studios')
+    // Read/Create/Edit/Destroy Studios
+    .get('/', studios.index)
+    .get('/new', loginAuth, studios.new)
+    .post('/new', loginAuth, studios.create)
+    .get('/:studioId', studios.show)
+    .get('/:studioId/edit', loginAuth, studios.edit)
+    .put('/:studioId/edit', loginAuth, studios.update)
+    .delete('/:studioId/delete', loginAuth, studios.destroy)
+    // Allow users to join studios.
+    .post('/:studioId/join', loginAuth, studio.join);
+
+
 
   // ERROR HANDLING ================================================
 

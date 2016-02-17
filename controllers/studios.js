@@ -141,3 +141,6 @@ exports.destroy = function(req, res) {
     res.redirect('/studios');
   });
 };
+
+// *** USER JOINING/INVITE ***********************************
+// TODO: Allow inviting of users.
