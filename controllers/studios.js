@@ -125,8 +125,8 @@ exports.update = function(req, res) {
 
 // show studio
 exports.show = function(req, res) {
-  console.log(req.params);
-  console.log("help ^?");
+  // console.log(req.params);
+  // console.log("help ^?");
   res.render('studios/show', {
     title: req.studio.name,
     studio: req.studio

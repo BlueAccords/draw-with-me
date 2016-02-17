@@ -40,12 +40,13 @@ exports.logout = function(req, res) {
 exports.join = function(req, res) {
   var studio = req.studio;
   var user = req.user;
-  console.log(req.article);
 
   user.joinStudio(studio, function(err) {
-    if(err) return res.render('error');
-
-    req.flash('success', 'Successfully joined studio');
+    if(err) {
+      req.flash('error', 'You are already a member of this studio!');
+    } else {
+      req.flash('success', 'Successfully joined studio');
+    }
     res.redirect('/studios/' + studio.id);
   });
 };
