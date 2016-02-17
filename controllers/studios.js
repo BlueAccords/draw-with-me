@@ -9,10 +9,10 @@ req.query.q => "tobi ferret"
 
 // Load Studio into session/req data.
 exports.load = function(req, res, next, id) {
-  console.log(req.params);
-  console.log(" idddddd ");
-  console.log(id);
-  console.log("help ^?");
+  // console.log(req.params);
+  // console.log(" idddddd ");
+  // console.log(id);
+  // console.log("help ^?");
   // FIXME: i have no idea what i was solving here in the studio controller
   Studio.load(id, function(err, studio) {
     if(err) {

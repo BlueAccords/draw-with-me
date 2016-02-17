@@ -44,8 +44,8 @@ exports.join = function(req, res) {
 
   user.joinStudio(studio, function(err) {
     if(err) return res.render('error');
-    
+
     req.flash('success', 'Successfully joined studio');
     res.redirect('/studios/' + studio.id);
-  })
+  });
 };

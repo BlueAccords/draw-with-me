@@ -8,5 +8,11 @@
 <p>Username: {{user.local.username}}</p>
 <p>Email: {{user.local.email}}</p>
 <!-- <p>Data: {{user.data}}</p> -->
+<h2>Studios</h2>
+<ul>
+  {% for item in user._studio_memberships %}
+  <li>{{ item.studio }} </li>
+  {% endfor %}
+</ul>
 <a href="/logout">Logout</a>
 {% endblock %}

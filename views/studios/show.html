@@ -1,0 +1,11 @@
+<h2>Name: <a href="/studios/{{studio._id}}">{{studio.name}}</a></h2>
+<div class="studio-info">
+  <h3>Owner: {{studio._owner.local.username}}</h3>
+  <!-- <h3>Owner: {{studio._owner}}</h3> -->
+  <h3>Email: {{studio._owner.local.email}}</h3>
+  <h4>Description:</h4>
+  <p>{{studio.description}}</p>
+  <form action="/studios/{{studio._id}}/join" method="post">
+    <input type="submit" name="join" value="Join">
+  </form>
+</div>
