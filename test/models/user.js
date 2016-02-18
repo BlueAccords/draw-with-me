@@ -1,8 +1,8 @@
 // jshint esversion: 6
 var chai   = require('chai'),
-    sinon  = require('sinon'),
-    expect = chai.expect,
-    should = chai.should();
+sinon  = require('sinon'),
+expect = chai.expect,
+should = chai.should();
 
 var mongoose = require('mongoose');
 var utils = require('../utils');
@@ -20,7 +20,7 @@ describe('User Methods', function() {
     function clearDB() {
       for(var i in mongoose.connection.collections) {
         mongoose.connection.collections[i]
-          .remove(function(){});
+        .remove(function(){});
       }
       return done();
     }
@@ -53,24 +53,24 @@ describe('User Methods', function() {
 
   describe('#save()', function() {
     it('should save a user with valid arguments', function(done) {
-        var user = {
-          local: {
-            username: 'Shinobu',
-            email: 'merumeru@mail.com',
-            password: 'foobar'
-          }
-        };
+      var user = {
+        local: {
+          username: 'Shinobu',
+          email: 'merumeru@mail.com',
+          password: 'foobar'
+        }
+      };
 
-        var newUser = new User(user);
+      var newUser = new User(user);
 
-        newUser.save(function(err, result) {
-          should.not.exist(err);
-          result.local.username.should.equal('Shinobu');
-          result.local.email.should.equal('merumeru@mail.com');
-          result.local.password.should.equal('foobar');
+      newUser.save(function(err, result) {
+        should.not.exist(err);
+        result.local.username.should.equal('Shinobu');
+        result.local.email.should.equal('merumeru@mail.com');
+        result.local.password.should.equal('foobar');
 
-          done();
-        });
+        done();
+      });
     });
 
     it('should NOT save a user with duplicate USERNAME', function(done) {
@@ -139,7 +139,7 @@ describe('User Methods', function() {
 
   describe('#joinStudio', function() {
     // User should add studio to their membership list if valid
-    it('should add studio to _studio_memberships', function(done) {
+    it('should add studio to studio_memberships', function(done) {
       var user = {
         local: {
           username: 'Shinobu',
@@ -162,61 +162,130 @@ describe('User Methods', function() {
         newStudio.save(function(err, resultStudio) {
           should.not.exist(err);
 
-          resultUser.joinStudio(resultStudio,
+          User.joinStudio(resultStudio, resultUser,
             function(err) {
               should.not.exist(err);
               console.log('****************** dup results ***********************');
               console.log(resultStudio._id);
-              console.log(resultUser._studio_memberships);
-              resultUser._studio_memberships[0].studio.should.equal(resultStudio._id);
-              
-              done();
-            });
-        });
-      });
-    });
+              console.log(resultUser.studio_memberships);
+              resultUser.studio_memberships.should.have.length(1);
+              resultUser.studio_memberships[0]._studio_id.should.equal(resultStudio._id);
 
-    it('should NOT allow duplicate studios to membership list', function(done) {
-
-      var user = {
-        local: {
-          username: 'Shinobu',
-          email: 'merumeru@mail.com',
-          password: 'foobar'
-        }
-      };
-
-
-      var studio = {
-        name: 'Donuts'
-      };
-
-      var newUser = new User(user);
-      var newStudio = new Studio(studio);
-
-      newUser.save(function(err, resultUser) {
-        should.not.exist(err);
-
-        newStudio.save(function(err, resultStudio) {
-          should.not.exist(err);
-
-          resultUser.joinStudio(resultStudio, function(err) {
-            should.not.exist(err);
-
-            resultUser.joinStudio(resultStudio, function(err, results) {
-              should.exist(err);
-
-              console.log(results);
-              // user should only belong to one studio
-              console.log(resultUser._studio_memberships);
-              resultUser._studio_memberships.should.have.length(1);
               done();
             });
           });
         });
       });
-    });
+
+      it('should FIND added after saving a studio', function(done) {
+        var user = {
+          local: {
+            username: 'Shinobu',
+            email: 'merumeru@mail.com',
+            password: 'foobar'
+          }
+        };
+
+        var studio = {
+          name: 'Donuts'
+        };
+
+        var newUser = new User(user);
+        var newStudio = new Studio(studio);
 
 
-  });
-});
+        newUser.save(function(err, resultUser) {
+          should.not.exist(err);
+
+          newStudio.save(function(err, resultStudio) {
+            should.not.exist(err);
+
+            User.joinStudio(resultStudio, resultUser,
+              function(err) {
+                should.not.exist(err);
+                // console.log('****************** dup results ***********************');
+                // console.log(resultStudio._id);
+                // console.log(resultUser.studio_memberships);
+                //.elemMatch("studio_memberships", {"_studio_id": studio._id})
+
+                User.findOne({_id: resultUser._id}, {
+                  studio_memberships: {
+                    $elemMatch: {
+                      _studio_id: studio._id
+                    }
+                  }}, function(err, results) {
+                    // console.log('FINALE ======================================= \n');
+                    // console.log(err);
+                    // console.log(results);
+
+                    should.not.equal(results, null);
+                    should.not.equal(results, undefined);
+                    done();
+                  });
+                  // .exec(function(err, results) {
+                  //
+                  //   console.log('\n results finale ==================================== \n');
+                  //   console.log(err);
+                  //   console.log(results);
+                  //
+                  //   should.not.equal(results, null);
+                  //   should.not.equal(results, undefined);
+                  //   done();
+                  // });
+                });
+              });
+            });
+          });
+
+
+
+
+          xit('should NOT allow duplicate studios to membership list', function(done) {
+
+            var user = {
+              local: {
+                username: 'Shinobu',
+                email: 'merumeru@mail.com',
+                password: 'foobar'
+              }
+            };
+
+
+            var studio = {
+              name: 'Donuts'
+            };
+
+            var newUser = new User(user);
+            var newStudio = new Studio(studio);
+
+            newUser.save(function(err, resultUser) {
+              should.not.exist(err);
+
+              newStudio.save(function(err, resultStudio) {
+                should.not.exist(err);
+
+                User.joinStudio(resultStudio, resultUser, function(err, msg) {
+                  should.not.exist(err);
+
+                  // mid result
+                  console.log('MIDDLE RESULT =================================');
+                  console.log(resultUser);
+                  User.joinStudio(resultStudio, resultUser, function(err, msg) {
+                    // should.exist(err);
+
+                    console.log(msg);
+                    // user should only belong to one studio
+                    console.log(' END RESULT **************************** \n');
+                    console.log(resultUser);
+                    // console.log(resultUser.studio_memberships);
+                    resultUser.studio_memberships.should.have.length(1);
+                    done();
+                  });
+                });
+              });
+            });
+          });
+
+
+        });
+      });

@@ -42,7 +42,7 @@ exports.join = function(req, res) {
   var user = req.user;
 
   // FIXME: refactor this to use the static method instead of the user specific method.
-  user.joinStudio(studio, function(err) {
+  User.joinStudio(studio, user, function(err) {
     if(err) {
       req.flash('error', 'You are already a member of this studio!');
     } else {

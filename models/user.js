@@ -27,8 +27,8 @@ var userSchema = new Schema({
     email           : String,
     name            : String,
   },
-  _studio_memberships : [{
-    studio: { type: Schema.Types.ObjectId, ref: 'Studio' },
+  studio_memberships : [{
+    _studio_id: { type: Schema.Types.ObjectId, ref: 'Studio' },
     join_date: { type: Date, default: Date.now()},
     _id: false
   }],
@@ -36,7 +36,7 @@ var userSchema = new Schema({
 
 // Validations
 
-userSchema.path('_studio_memberships').validate(function(val) {
+userSchema.path('studio_memberships').validate(function(val) {
   // TODO: Decide to keep this or remove user validation.
   // console.log('THIS IS THE STUDIO VALIDATION INFO ******************* V');
   // console.log(val);
@@ -81,15 +81,14 @@ userSchema.statics = {
   // Allows user to join studio.
   // @param {Object} studio
   // @param {Function} cb
-  joinStudio: function(studio, cb) {
-    console.log('Joining studio ...');
+  joinStudio: function(studio, user, cb) {
+    console.log('Joining studio ... \n\n');
     // this._studio_memberships.push({
     //   studio: studio._id,
     //   join_date: Date.now()
     // });
-    var user = this;
-
-    var studioItem = null;
+    //
+    // var studioItem = null;
     // var counter = 0;
     // check if user is already a member of a studio.
     // this._studio_memberships.forEach(function(val){
@@ -105,23 +104,63 @@ userSchema.statics = {
     // });
 
     // TODO: use the find/elemMatch methods
-    console.log('this isn\'t even being ran is it?');
-
-    console.log(this);
     // var query =
-    User.findOne({"_id": this._id}, function(err, result) {
-      console.log(result);
-      console.log('Hello?');
 
-      user._studio_memberships.push({
-        studio: studio._id,
-        join_date: Date.now()
+    this.findOne({_id: user._id}, {
+      studio_memberships: {
+        $elemMatch: {
+          _studio_id: studio._id
+        }
+      }}, function(err, results) {
+        console.log('FINALE ======================================= \n');
+        console.log("error" + err);
+        console.log(results);
+
+        if(results) {
+            console.log(' ********************* dupe found *');
+            cb(null, 'Follow me!');
+          } else {
+            console.log(' ********************* dupe not found *');
+            user.studio_memberships.push({
+              _studio_id: studio._id,
+              join_date: Date.now()
+            });
+
+            console.log('rip in pepperonis, studio joined.');
+            user.save(cb(null, 'Success?'));
+          }
       });
 
-      console.log('rip in pepperonis, studio joined.');
-      user.save(cb);
 
-    });
+    // this.findOne({_id: user._id}).elemMatch("studio_memberships", {"_studio_id": studio._id})
+    //   .exec(function(err, result) {
+    //     console.log('COMPARISON ===================================================\n');
+    //     console.log(result);
+    //     console.log(studio._id);
+    //     console.log('\nEND COMPARISON ==========================================================');
+    //   if(result) {
+    //     console.log(' ********************* dupe found *');
+    //     cb(null, 'Follow me!');
+    //   } else {
+    //     console.log(' ********************* dupe not found *');
+    //     user.studio_memberships.push({
+    //       _studio_id: studio._id,
+    //       join_date: Date.now()
+    //     });
+    //
+    //     console.log('rip in pepperonis, studio joined.');
+    //     user.save(cb(null, 'Success?'));
+    //   }
+    //   // user._studio_memberships.push({
+    //   //   studio: studio._id,
+    //   //   join_date: Date.now()
+    //   // });
+    //   //
+    //   // console.log('rip in pepperonis, studio joined.');
+    //   // user.save(cb);
+    //   // cb();
+    //
+    // });
 
     // .elemMatch("_studio_memberships", {"studio": studio._id});
 
@@ -137,7 +176,7 @@ userSchema.statics = {
       // cb();
 
     }
-}
+};
 
 
 
