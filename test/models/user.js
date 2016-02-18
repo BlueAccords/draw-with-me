@@ -73,7 +73,7 @@ describe('User Methods', function() {
         });
     });
 
-    it('should NOT save a user with duplicate USERNAME', function() {
+    it('should NOT save a user with duplicate USERNAME', function(done) {
       var user1 = {
         local: {
           username: 'Hatchikuji',
@@ -103,7 +103,7 @@ describe('User Methods', function() {
       });
     });
 
-    it('should NOT save a user with duplicate EMAIL', function() {
+    it('should NOT save a user with duplicate EMAIL', function(done) {
       var user1 = {
         local: {
           username: 'Hatchikuji',
@@ -139,7 +139,7 @@ describe('User Methods', function() {
 
   describe('#joinStudio', function() {
     // User should add studio to their membership list if valid
-    it('should add studio to _studio_memberships', function() {
+    it('should add studio to _studio_memberships', function(done) {
       var user = {
         local: {
           username: 'Shinobu',
@@ -165,17 +165,18 @@ describe('User Methods', function() {
           resultUser.joinStudio(resultStudio,
             function(err) {
               should.not.exist(err);
+              console.log('****************** dup results ***********************');
               console.log(resultStudio._id);
-
+              console.log(resultUser._studio_memberships);
               resultUser._studio_memberships[0].studio.should.equal(resultStudio._id);
-
+              
               done();
             });
         });
       });
     });
 
-    it('should NOT allow duplicate studios to membership list', function() {
+    it('should NOT allow duplicate studios to membership list', function(done) {
 
       var user = {
         local: {
@@ -199,13 +200,15 @@ describe('User Methods', function() {
         newStudio.save(function(err, resultStudio) {
           should.not.exist(err);
 
-          resultUser.joinStudio(resultStudio.id, function(err) {
+          resultUser.joinStudio(resultStudio, function(err) {
             should.not.exist(err);
 
-            resultUser.joinStudio(resultStudio.id, function(err) {
+            resultUser.joinStudio(resultStudio, function(err, results) {
               should.exist(err);
 
+              console.log(results);
               // user should only belong to one studio
+              console.log(resultUser._studio_memberships);
               resultUser._studio_memberships.should.have.length(1);
               done();
             });

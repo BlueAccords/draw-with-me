@@ -74,6 +74,10 @@ userSchema.methods = {
     return bcrypt.compareSync(password, this.local.password);
   },
 
+
+};
+
+userSchema.statics = {
   // Allows user to join studio.
   // @param {Object} studio
   // @param {Function} cb
@@ -83,32 +87,57 @@ userSchema.methods = {
     //   studio: studio._id,
     //   join_date: Date.now()
     // });
+    var user = this;
 
     var studioItem = null;
-    var counter = 0;
+    // var counter = 0;
     // check if user is already a member of a studio.
-    this._studio_memberships.forEach(function(val){
-      studioItem = val.studio;
-      console.log("studio item -> \n" + studioItem);
-      console.log(" vs ");
-      console.log(studio._id);
-      console.log("---------------------------------");
-      if(studioItem.toString() == studio._id.toString()) {
-        console.log(' Failure! i mean success! Studio not joined.!');
-        return cb('You are already a member of that studio');
-      }
+    // this._studio_memberships.forEach(function(val){
+    //   studioItem = val.studio;
+    //   console.log("studio item -> \n" + studioItem);
+    //   console.log(" vs ");
+    //   console.log(studio._id);
+    //   console.log("---------------------------------");
+    //   if(studioItem.toString() == studio._id.toString()) {
+    //     console.log(' Failure! i mean success! Studio not joined.!');
+    //     return cb('You are already a member of that studio');
+    //   }
+    // });
+
+    // TODO: use the find/elemMatch methods
+    console.log('this isn\'t even being ran is it?');
+
+    console.log(this);
+    // var query =
+    User.findOne({"_id": this._id}, function(err, result) {
+      console.log(result);
+      console.log('Hello?');
+
+      user._studio_memberships.push({
+        studio: studio._id,
+        join_date: Date.now()
+      });
+
+      console.log('rip in pepperonis, studio joined.');
+      user.save(cb);
+
     });
 
-    this._studio_memberships.push({
-      studio: studio._id,
-      join_date: Date.now()
-    });
+    // .elemMatch("_studio_memberships", {"studio": studio._id});
 
-    console.log('rip in pepperonis, studio joined.');
-    this.save(cb);
+    // console.log(query);
+
+    // ,
+    //   function(err, result) {
+    //       // if(err) throw err;
+    //       console.log(err);
+    //       console.log("implying this will work *******************");
+    //       console.log(result);
+    //   }
+      // cb();
+
     }
-};
-
+}
 
 
 
