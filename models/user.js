@@ -5,8 +5,8 @@ var Schema = mongoose.Schema;
 // User Schema
 var userSchema = new Schema({
   local             : {
-    username        : String,
-    email           : { type: String, lowercase: true },
+    username        : { type: String, unique: true, trim: true },
+    email           : { type: String, unique: true, lowercase: true, trim: true },
     password        : String,
   },
   facebook          : {
@@ -85,7 +85,7 @@ userSchema.methods = {
     // });
 
     var studioItem = null;
-
+    var counter = 0;
     // check if user is already a member of a studio.
     this._studio_memberships.forEach(function(val){
       studioItem = val.studio;

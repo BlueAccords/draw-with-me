@@ -8,8 +8,8 @@ var mongoose = require('mongoose');
 var Studio = require('./models/studio');
 var User = require('./models/user');
 
-var UserSeed = require('./test/models/user');
-var StudioSeed = require('./test/models/studio');
+var UserSeed = require('./seeds/user');
+var StudioSeed = require('./seeds/studio');
 
 var config   = require('./config/database');
 mongoose.connect(config.db.test);
@@ -54,7 +54,7 @@ before(function(done) {
   // Reset collections
   User.remove().exec()
   .then(function() {
-    return Studio.remove().exec()
+    return Studio.remove().exec();
   })
   // .then(function() {
   //     return WorkoutTemplate.remove().exec()
