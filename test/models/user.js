@@ -163,13 +163,11 @@ describe('User Methods', function() {
           should.not.exist(err);
 
           User.joinStudio(resultStudio, resultUser,
-            function(err) {
+            function(err, finalResult) {
               should.not.exist(err);
-              console.log('****************** dup results ***********************');
-              console.log(resultStudio._id);
-              console.log(resultUser.studio_memberships);
-              resultUser.studio_memberships.should.have.length(1);
-              resultUser.studio_memberships[0]._studio_id.should.equal(resultStudio._id);
+              
+              finalResult.studio_memberships.should.have.length(1);
+              finalResult.studio_memberships[0]._id.should.equal(resultStudio._id);
 
               done();
             });
@@ -201,41 +199,45 @@ describe('User Methods', function() {
             should.not.exist(err);
 
             User.joinStudio(resultStudio, resultUser,
-              function(err) {
+              function(err, resultSaved) {
                 should.not.exist(err);
+
+                // console.log(' FINAL RESULTS ========================');
+                // console.log(resultSaved);
+                resultSaved.studio_memberships[0]._id.should.equal(resultStudio._id);
                 // console.log('****************** dup results ***********************');
                 // console.log(resultStudio._id);
                 // console.log(resultUser.studio_memberships);
                 //.elemMatch("studio_memberships", {"_studio_id": studio._id})
 
-                User.findOne({_id: resultUser._id}, {
-                  studio_memberships: {
-                    $elemMatch: {
-                      _studio_id: studio._id
-                    }
-                  }}, function(err, results) {
-                    // console.log('FINALE ======================================= \n');
-                    // console.log(err);
-                    // console.log(results);
+                // User.findOne({_id: resultUser.id}).select({
+                //   studio_memberships: {
+                //     $elemMatch: {
+                //       _studio_id: resultStudio.id
+                //     }
+                //   }}).exec(function(err, results) {
+                //     // console.log('FINALE ======================================= \n');
+                //     // console.log(err);
+                //     // console.log(results);
+                //
+                //     should.not.equal(results, null);
+                //     should.not.equal(results, undefined);
+                //     done();
+                //   });
 
-                    should.not.equal(results, null);
-                    should.not.equal(results, undefined);
-                    done();
-                  });
-                  // .exec(function(err, results) {
-                  //
-                  //   console.log('\n results finale ==================================== \n');
-                  //   console.log(err);
-                  //   console.log(results);
-                  //
-                  //   should.not.equal(results, null);
-                  //   should.not.equal(results, undefined);
-                  //   done();
-                  // });
+
+                // User.find({}, function(err, results) {
+                //   console.log('RESULTING =========================');
+                //   console.log(results);
+                //   results[0].studio_memberships[0]._studio_id.should.equal(resultStudio._id);
+                //   done();
+                // });
+                done();
                 });
               });
             });
           });
+        });
 
 
 
@@ -288,4 +290,3 @@ describe('User Methods', function() {
 
 
         });
-      });

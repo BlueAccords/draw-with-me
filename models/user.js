@@ -105,76 +105,65 @@ userSchema.statics = {
 
     // TODO: use the find/elemMatch methods
     // var query =
+    console.log('this should have anything ======================');
+    console.log(user.studio_memberships);
+    console.log('VS =================');
+    console.log(studio._id);
 
-    this.findOne({_id: user._id}, {
-      studio_memberships: {
-        $elemMatch: {
-          _studio_id: studio._id
-        }
-      }}, function(err, results) {
-        console.log('FINALE ======================================= \n');
-        console.log("error" + err);
-        console.log(results);
-
-        if(results) {
-            console.log(' ********************* dupe found *');
-            cb(null, 'Follow me!');
-          } else {
-            console.log(' ********************* dupe not found *');
-            user.studio_memberships.push({
-              _studio_id: studio._id,
-              join_date: Date.now()
-            });
-
-            console.log('rip in pepperonis, studio joined.');
-            user.save(cb(null, 'Success?'));
-          }
-      });
-
-
-    // this.findOne({_id: user._id}).elemMatch("studio_memberships", {"_studio_id": studio._id})
-    //   .exec(function(err, result) {
-    //     console.log('COMPARISON ===================================================\n');
-    //     console.log(result);
-    //     console.log(studio._id);
-    //     console.log('\nEND COMPARISON ==========================================================');
-    //   if(result) {
-    //     console.log(' ********************* dupe found *');
-    //     cb(null, 'Follow me!');
-    //   } else {
+    // this.findOne({_id: user._id}, {
+    //   studio_memberships: {
+    //     $elemMatch: {
+    //       _studio_id: studio._id
+    //     }
+    //   }}, function(err, results) {
+    //     console.log('FINALE ======================================= \n');
+    //     console.log("error" + err);
+    //     console.log(results);
+    //
     //     console.log(' ********************* dupe not found *');
     //     user.studio_memberships.push({
     //       _studio_id: studio._id,
     //       join_date: Date.now()
     //     });
     //
-    //     console.log('rip in pepperonis, studio joined.');
-    //     user.save(cb(null, 'Success?'));
-    //   }
-    //   // user._studio_memberships.push({
-    //   //   studio: studio._id,
-    //   //   join_date: Date.now()
-    //   // });
-    //   //
-    //   // console.log('rip in pepperonis, studio joined.');
-    //   // user.save(cb);
-    //   // cb();
     //
-    // });
+    //     user.save(cb(null, 'Success?'));
 
-    // .elemMatch("_studio_memberships", {"studio": studio._id});
+    console.log('USER ID = ' + user._id);
+    this.findOne({_id: user._id}, function(err, results) {
+      console.log(' RESULTS ====================');
+      console.log(results);
 
-    // console.log(query);
+      results.studio_memberships.push({
+        _id: studio._id,
+        join_date: Date.now()
+      });
 
-    // ,
-    //   function(err, result) {
-    //       // if(err) throw err;
-    //       console.log(err);
-    //       console.log("implying this will work *******************");
-    //       console.log(result);
-    //   }
-      // cb();
+      results.save(cb(null, results));
+    });
 
+
+
+
+
+
+
+
+
+        // if(results) {
+        //     console.log(' ********************* dupe found *');
+        //     cb(null, 'Follow me!');
+        //   } else {
+        //     console.log(' ********************* dupe not found *');
+        //     user.studio_memberships.push({
+        //       _studio_id: studio._id,
+        //       join_date: Date.now()
+        //     });
+        //
+        //
+        //     user.save(cb(null, 'Success?'));
+        //   }
+        // });
     }
 };
 
