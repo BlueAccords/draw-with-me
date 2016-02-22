@@ -77,30 +77,8 @@ userSchema.statics = {
   joinStudio: function(studio, user, cb) {
     console.log('Joining studio ... \n\n');
 
-    // TODO: use the find/elemMatch methods
-    // var query =
-    // console.log('PRE SEARCH COMPARISON ======================');
-    // console.log(user.studio_memberships);
-    // console.log('VS =================');
-    // console.log(studio._id);
 
-    // this.findOne({_id: user._id})
-    //   .elemMatch('studio_memberships', {_id: studio._id})
-    //   .exec(function(err, results) {
-        // console.log('CHECKING FOR DUPES ======================================= \n');
-        // console.log("error\n" + err);
-        // console.log(results);
-
-        // console.log(' ********************* dupe not found *');
-        // user.studio_memberships.push({
-        //   _studio_id: studio._id,
-        //   join_date: Date.now()
-        // });
-        //
-        //
-        // user.save(cb(null, results));
-
-
+    //IDEA: Refactor this to use validator + async module.
     // STABLE ============================================
 
     // console.log('USER ID = ' + user._id);
@@ -116,7 +94,6 @@ userSchema.statics = {
     //   results.save(cb(null, results));
     // });
 
-    // var user = { uid: userOid, ... };
     var studioObject = {
       studio_id : studio._id,
       join_date: Date.now()
@@ -126,28 +103,8 @@ userSchema.statics = {
     {_id: user._id, 'studio_memberships.studio_id': {$ne: studioObject.studio_id}},
     {$push: {'studio_memberships': studioObject}},
     function(err, results) {
-      console.log('FINAL FANTASY ======================= RESULTS');
-      console.log(results);
       cb(null, results);
     });
-
-    // Group.update({name: 'admin'}, {$addToSet: {users: userOid}}, ...
-
-
-        // if(results) {
-        //     // console.log(' ********************* dupe found *');
-        //     cb(null, user);
-        //   } else {
-        //     // FIXME: replace user... Need to find a user for results instead of null user if dupe not found.
-        //     // console.log(' ********************* dupe not found *');
-        //     user.studio_memberships.push({
-        //       _id: studio._id
-        //     });
-        //
-        //
-        //     user.save(cb(null, user));
-        //   }
-        // });
     }
 };
 

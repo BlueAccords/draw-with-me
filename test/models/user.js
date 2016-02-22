@@ -207,7 +207,7 @@ describe('User Methods', function() {
                   // console.log('RESULTING =========================');
                   // console.log(results[0].studio_memberships);
 
-                  results[0].studio_memberships[0].studio_id.should.equal(resultStudio._id);
+                  results[0].studio_memberships[0].studio_id.toString().should.equal(resultStudio._id.toString());
                   done();
                 });
               });
@@ -216,7 +216,7 @@ describe('User Methods', function() {
         });
 
 
-        xit('should NOT allow duplicate studios to membership list', function(done) {
+        it('should NOT allow duplicate studios to membership list', function(done) {
 
           var user = {
             local: {
@@ -244,22 +244,12 @@ describe('User Methods', function() {
                 should.not.exist(err);
 
                 User.joinStudio(resultStudio, resultSavedOne, function(err, resultSavedTwo) {
-                  // should.exist(err);
 
-                  // console.log(msg);
-                  // user should only belong to one studio
-                  console.log('ORIGINAL USER ==================');
-                  console.log(user);
-                  console.log('Result User ===================');
-                  console.log(resultUser);
-                  console.log('\n' + 'SAVED TWO =========================');
-                  console.log(resultSavedTwo);
-                  console.log('\n' + 'SAVED ONE ===========');
-                  console.log(resultSavedOne);
-
-                  resultSavedTwo.studio_memberships.should.have.length(1);
-                  resultSavedOne.studio_memberships.should.have.length(1);
-                  done();
+                  User.find({}, function(err, results) {
+                    results[0].studio_memberships.should.have.length(1);
+                    results[0].studio_memberships[0].studio_id.toString().should.equal(resultStudio._id.toString());
+                    done();
+                  });
                 });
               });
             });
