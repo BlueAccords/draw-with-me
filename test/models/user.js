@@ -165,9 +165,10 @@ describe('User Methods', function() {
           User.joinStudio(resultStudio, resultUser,
             function(err, finalResult) {
               should.not.exist(err);
-              
-              finalResult.studio_memberships.should.have.length(1);
-              finalResult.studio_memberships[0]._id.should.equal(resultStudio._id);
+
+              finalResult.ok.should.equal(1);
+              finalResult.nModified.should.equal(1);
+              finalResult.n.should.equal(1);
 
               done();
             });
@@ -202,37 +203,12 @@ describe('User Methods', function() {
               function(err, resultSaved) {
                 should.not.exist(err);
 
-                // console.log(' FINAL RESULTS ========================');
-                // console.log(resultSaved);
-                resultSaved.studio_memberships[0]._id.should.equal(resultStudio._id);
-                // console.log('****************** dup results ***********************');
-                // console.log(resultStudio._id);
-                // console.log(resultUser.studio_memberships);
-                //.elemMatch("studio_memberships", {"_studio_id": studio._id})
+                User.find({}, function(err, results) {
+                  // console.log('RESULTING =========================');
+                  // console.log(results[0].studio_memberships);
 
-                // User.findOne({_id: resultUser.id}).select({
-                //   studio_memberships: {
-                //     $elemMatch: {
-                //       _studio_id: resultStudio.id
-                //     }
-                //   }}).exec(function(err, results) {
-                //     // console.log('FINALE ======================================= \n');
-                //     // console.log(err);
-                //     // console.log(results);
-                //
-                //     should.not.equal(results, null);
-                //     should.not.equal(results, undefined);
-                //     done();
-                //   });
-
-
-                // User.find({}, function(err, results) {
-                //   console.log('RESULTING =========================');
-                //   console.log(results);
-                //   results[0].studio_memberships[0]._studio_id.should.equal(resultStudio._id);
-                //   done();
-                // });
-                done();
+                  results[0].studio_memberships[0].studio_id.should.equal(resultStudio._id);
+                  done();
                 });
               });
             });
@@ -240,53 +216,54 @@ describe('User Methods', function() {
         });
 
 
+        xit('should NOT allow duplicate studios to membership list', function(done) {
+
+          var user = {
+            local: {
+              username: 'Shinobu',
+              email: 'merumeru@mail.com',
+              password: 'foobar'
+            }
+          };
 
 
-          xit('should NOT allow duplicate studios to membership list', function(done) {
+          var studio = {
+            name: 'Donuts'
+          };
 
-            var user = {
-              local: {
-                username: 'Shinobu',
-                email: 'merumeru@mail.com',
-                password: 'foobar'
-              }
-            };
+          var newUser = new User(user);
+          var newStudio = new Studio(studio);
 
+          newUser.save(function(err, resultUser) {
+            should.not.exist(err);
 
-            var studio = {
-              name: 'Donuts'
-            };
-
-            var newUser = new User(user);
-            var newStudio = new Studio(studio);
-
-            newUser.save(function(err, resultUser) {
+            newStudio.save(function(err, resultStudio) {
               should.not.exist(err);
 
-              newStudio.save(function(err, resultStudio) {
+              User.joinStudio(resultStudio, resultUser, function(err, resultSavedOne) {
                 should.not.exist(err);
 
-                User.joinStudio(resultStudio, resultUser, function(err, msg) {
-                  should.not.exist(err);
+                User.joinStudio(resultStudio, resultSavedOne, function(err, resultSavedTwo) {
+                  // should.exist(err);
 
-                  // mid result
-                  console.log('MIDDLE RESULT =================================');
+                  // console.log(msg);
+                  // user should only belong to one studio
+                  console.log('ORIGINAL USER ==================');
+                  console.log(user);
+                  console.log('Result User ===================');
                   console.log(resultUser);
-                  User.joinStudio(resultStudio, resultUser, function(err, msg) {
-                    // should.exist(err);
+                  console.log('\n' + 'SAVED TWO =========================');
+                  console.log(resultSavedTwo);
+                  console.log('\n' + 'SAVED ONE ===========');
+                  console.log(resultSavedOne);
 
-                    console.log(msg);
-                    // user should only belong to one studio
-                    console.log(' END RESULT **************************** \n');
-                    console.log(resultUser);
-                    // console.log(resultUser.studio_memberships);
-                    resultUser.studio_memberships.should.have.length(1);
-                    done();
-                  });
+                  resultSavedTwo.studio_memberships.should.have.length(1);
+                  resultSavedOne.studio_memberships.should.have.length(1);
+                  done();
                 });
               });
             });
           });
-
-
         });
+      });
+    });

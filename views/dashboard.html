@@ -10,8 +10,8 @@
 <!-- <p>Data: {{user.data}}</p> -->
 <h2>Studios</h2>
 <ul>
-  {% for item in user._studio_memberships %}
-  <li>{{ item.studio }} </li>
+  {% for item in user.studio_memberships %}
+  <li>{{ item }} </li>
   {% endfor %}
 </ul>
 <a href="/logout">Logout</a>

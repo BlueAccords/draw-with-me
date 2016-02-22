@@ -28,38 +28,31 @@ var userSchema = new Schema({
     name            : String,
   },
   studio_memberships : [{
-    _studio_id: { type: Schema.Types.ObjectId, ref: 'Studio' },
-    join_date: { type: Date, default: Date.now()},
-    _id: false
+    studio_id: {type: Schema.Types.ObjectId, ref: 'Studio'},
+    join_date: {type: Date, default: Date.now()}
   }],
 });
 
 // Validations
 
 userSchema.path('studio_memberships').validate(function(val) {
-  // TODO: Decide to keep this or remove user validation.
-  // console.log('THIS IS THE STUDIO VALIDATION INFO ******************* V');
-  // console.log(val);
+  // console.log('VALIDATOR ==========================');
+  // // console.log(val);
+  // var sortedArr = val.slice();
+  // sortedArr.sort();
   //
-  // val.forEach(function(item) {
-  //   if(item.studio.toString() == )
-  // })
-  /*
-  [ { studio: 56c012a5c1a1f26c3362279c,
-    _id: 56c4f4c9a5abae1d21e96642,
-    join_date: Wed Feb 17 2016 14:31:37 GMT-0800 (PST) },
-  { studio: 56c012a5c1a1f26c3362279c,
-    _id: 56c4f4eed0f3892521ce64e7,
-    join_date: Wed Feb 17 2016 14:32:14 GMT-0800 (PST) },
-  { studio: 56c012a5c1a1f26c336227ac,
-    _id: 56c4f5e98f8dff4b218c397e,
-    join_date: Wed Feb 17 2016 14:36:25 GMT-0800 (PST) },
-  { studio: 56c012a5c1a1f26c336227ae,
-    _id: 56c4f63ebf4da95c21cecb77,
-    join_date: Wed Feb 17 2016 14:37:50 GMT-0800 (PST) } ]
-    */
+  // var i;
+  // for (i = 1; i < sortedArr.length; ++i) {
+  //   console.log(sortedArr[i]._id);
+  //   console.log('VS');
+  //   console.log(sortedArr[i-1]._id);
+  //   console.log('');
+  //   if(sortedArr[i]._id === sortedArr[i-1]._id){
+  //     return false;
+  //   }
+  // }
   return true;
-});
+}, 'Duplicate found');
 
 // methods ======================
 
@@ -83,85 +76,76 @@ userSchema.statics = {
   // @param {Function} cb
   joinStudio: function(studio, user, cb) {
     console.log('Joining studio ... \n\n');
-    // this._studio_memberships.push({
-    //   studio: studio._id,
-    //   join_date: Date.now()
-    // });
-    //
-    // var studioItem = null;
-    // var counter = 0;
-    // check if user is already a member of a studio.
-    // this._studio_memberships.forEach(function(val){
-    //   studioItem = val.studio;
-    //   console.log("studio item -> \n" + studioItem);
-    //   console.log(" vs ");
-    //   console.log(studio._id);
-    //   console.log("---------------------------------");
-    //   if(studioItem.toString() == studio._id.toString()) {
-    //     console.log(' Failure! i mean success! Studio not joined.!');
-    //     return cb('You are already a member of that studio');
-    //   }
-    // });
 
     // TODO: use the find/elemMatch methods
     // var query =
-    console.log('this should have anything ======================');
-    console.log(user.studio_memberships);
-    console.log('VS =================');
-    console.log(studio._id);
+    // console.log('PRE SEARCH COMPARISON ======================');
+    // console.log(user.studio_memberships);
+    // console.log('VS =================');
+    // console.log(studio._id);
 
-    // this.findOne({_id: user._id}, {
-    //   studio_memberships: {
-    //     $elemMatch: {
-    //       _studio_id: studio._id
-    //     }
-    //   }}, function(err, results) {
-    //     console.log('FINALE ======================================= \n');
-    //     console.log("error" + err);
-    //     console.log(results);
-    //
-    //     console.log(' ********************* dupe not found *');
-    //     user.studio_memberships.push({
-    //       _studio_id: studio._id,
-    //       join_date: Date.now()
-    //     });
-    //
-    //
-    //     user.save(cb(null, 'Success?'));
+    // this.findOne({_id: user._id})
+    //   .elemMatch('studio_memberships', {_id: studio._id})
+    //   .exec(function(err, results) {
+        // console.log('CHECKING FOR DUPES ======================================= \n');
+        // console.log("error\n" + err);
+        // console.log(results);
 
-    console.log('USER ID = ' + user._id);
-    this.findOne({_id: user._id}, function(err, results) {
-      console.log(' RESULTS ====================');
+        // console.log(' ********************* dupe not found *');
+        // user.studio_memberships.push({
+        //   _studio_id: studio._id,
+        //   join_date: Date.now()
+        // });
+        //
+        //
+        // user.save(cb(null, results));
+
+
+    // STABLE ============================================
+
+    // console.log('USER ID = ' + user._id);
+    // this.findOne({_id: user._id}, function(err, results) {
+    //   console.log(' RESULTS ====================');
+    //   console.log(results);
+    //
+    //   results.studio_memberships.push({
+    //     _id: studio._id,
+    //     join_date: Date.now()
+    //   });
+    //
+    //   results.save(cb(null, results));
+    // });
+
+    // var user = { uid: userOid, ... };
+    var studioObject = {
+      studio_id : studio._id,
+      join_date: Date.now()
+    };
+
+    this.update(
+    {_id: user._id, 'studio_memberships.studio_id': {$ne: studioObject.studio_id}},
+    {$push: {'studio_memberships': studioObject}},
+    function(err, results) {
+      console.log('FINAL FANTASY ======================= RESULTS');
       console.log(results);
-
-      results.studio_memberships.push({
-        _id: studio._id,
-        join_date: Date.now()
-      });
-
-      results.save(cb(null, results));
+      cb(null, results);
     });
 
-
-
-
-
-
-
+    // Group.update({name: 'admin'}, {$addToSet: {users: userOid}}, ...
 
 
         // if(results) {
-        //     console.log(' ********************* dupe found *');
-        //     cb(null, 'Follow me!');
+        //     // console.log(' ********************* dupe found *');
+        //     cb(null, user);
         //   } else {
-        //     console.log(' ********************* dupe not found *');
+        //     // FIXME: replace user... Need to find a user for results instead of null user if dupe not found.
+        //     // console.log(' ********************* dupe not found *');
         //     user.studio_memberships.push({
-        //       _studio_id: studio._id,
-        //       join_date: Date.now()
+        //       _id: studio._id
         //     });
         //
         //
-        //     user.save(cb(null, 'Success?'));
+        //     user.save(cb(null, user));
         //   }
         // });
     }
