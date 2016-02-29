@@ -20,7 +20,9 @@ You should also try to make your models independent from the outside world. They
   * URL generation for rooms
   * Generate private room keys
   * Room authorization restrictions
-
+  * ~~Users can join rooms~~
+    * Room owners must approve requests
+    * Room owners can invite others via email.
 ## ACCESS CONTROL DESIGN  
 
 ### Users  
