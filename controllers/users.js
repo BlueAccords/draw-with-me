@@ -3,6 +3,7 @@
 
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
+var VerifyToken = mongoose.model('UserToken');
 
 // create User
 // IDEA: refactor create user to get it out of passport local strategy.
@@ -49,5 +50,26 @@ exports.join = function(req, res) {
       req.flash('success', 'Successfully joined studio');
     }
     res.redirect('/studios/' + studio.id);
+  });
+};
+
+
+// *** User Email Verification **********************************
+
+exports.verifyUser = function(req, res, next) {
+  var token = req.params.token;
+  VerifyToken.findOne({token: token}, function(err, resultToken) {
+    if(err) return next(err);
+
+    User.findOne({_id: resultToken._userId}, function(err, user) {
+      if(err) return next(err);
+
+      user.local.verified = true;
+      user.save(function(err, user) {
+        if(err) return next(err);
+
+        next(user);
+      });
+    });
   });
 };

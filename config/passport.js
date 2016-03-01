@@ -5,8 +5,9 @@ var FacebookStrategy = require('passport-facebook').Strategy;
 var TwitterStrategy = require('passport-twitter').Strategy;
 
 // load user model.
+// load verification token
 var User = require('../models/user');
-
+var VerifyToken = require('../models/userToken.js');
 // export passport as function module
 //TODO: serialize authorization data.
 // unserialize it when session info is needed.
@@ -76,6 +77,12 @@ module.exports = function(passport) {
               throw err;
             }
 
+            // TODO: Refactor user sign up. abstract it outside of passport
+            var verifyToken = new VerifyToken({_userId: newUser._id});
+            verifyToken.generateVerificationToken(function(err, token) {
+              if(err) throw new Error(err);
+              
+            });
             // return user
             return done(null, newUser);
           });

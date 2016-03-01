@@ -1,6 +1,7 @@
 // load required libraries.
 var mongoose = require('mongoose');
 var bcrypt   = require('bcryptjs');
+
 var Schema = mongoose.Schema;
 // User Schema
 var userSchema = new Schema({
@@ -8,6 +9,9 @@ var userSchema = new Schema({
     username        : { type: String, unique: true, trim: true },
     email           : { type: String, unique: true, lowercase: true, trim: true },
     password        : String,
+    verification_token: { type: String},
+    token_date      : { type: Date, default: Date.now, expires: '1h' },
+    verified        : { type: Boolean, default: false },
   },
   facebook          : {
     id              : String,
@@ -66,7 +70,6 @@ userSchema.methods = {
   validPassword: function(password) {
     return bcrypt.compareSync(password, this.local.password);
   },
-
 
 };
 

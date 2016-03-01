@@ -28,7 +28,7 @@ describe('User Methods', function() {
     clearDB();
   });
 
-  describe('#create()', function() {
+  describe('#create', function() {
     it('should create a new User', function(done) {
       // create a new user to pass to create
       var user = {
@@ -51,7 +51,7 @@ describe('User Methods', function() {
     });
   });
 
-  describe('#save()', function() {
+  describe('#save', function() {
     it('should save a user with valid arguments', function(done) {
       var user = {
         local: {
@@ -135,7 +135,6 @@ describe('User Methods', function() {
 
 
   });
-
 
   describe('#joinStudio', function() {
     // User should add studio to their membership list if valid
@@ -256,4 +255,5 @@ describe('User Methods', function() {
           });
         });
       });
+
     });
