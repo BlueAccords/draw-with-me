@@ -3,12 +3,13 @@ var config = require('../config/mailer.js');
 var nodemailer = require('nodemailer');
 var path = require('path');
 var templatesDir = path.resolve(__dirname, 'templates');
-var emailTemplates = require('email-templates');
+var EmailTemplate = require('email-templates').EmailTemplate;
 
-var emailAddressReqErr = new Error('email address required');
+var EmailAddressRequiredError = new Error('email address required');
 
 
-// defaultTransport using nodemailer, gmail, and auth from config file.
+// create a defaultTransport using gmail and authentication that are
+// stored in the `config.js` file.
 var defaultTransport = nodemailer.createTransport('SMTP', {
   service: 'Gmail',
   auth: {
@@ -18,59 +19,38 @@ var defaultTransport = nodemailer.createTransport('SMTP', {
 });
 
 
-// export methods
 exports.sendOne = function(templateName, locals, fn) {
-  console.log('SEND ONE');
-  console.log(templateName);
-  console.log(locals);
-  console.log(typeof fn);
-  // validate user email requirement
-  if(!locals.email) {
-    return fn(emailAddressReqErr);
+  // make sure that we have an user email
+  if (!locals.email) {
+    return fn(EmailAddressRequiredError);
+  }
+  // make sure that we have a message
+  if (!locals.subject) {
+    return fn(EmailAddressRequiredError);
   }
 
-  // validate message requirement
-  if(!locals.subject) {
-    return fn(emailAddressReqErr);
-  }
+  var template = new EmailTemplate(path.join(templatesDir, templateName));
 
-  // FIXME: comment out console.logs later in mailer
-  // GET email template and send mail
-  emailTemplates(templatesDir, function(err, template) {
+  template.render(locals, function(err, results) {
+    console.log(err);
     if(err) {
-      // console.log(err);
-
       return fn(err);
     }
 
-    // send a single email
-    template(templateName, locals, function(err, html, text) {
-      if(err) {
-        // console.log(err);
+    var transport = defaultTransport;
+
+    transport.sendMail({
+      from: config.mailer.defaultFromAddress,
+      to: locals.email,
+      subject: locals.subject,
+      html: results.html,
+      // generateTextFromHTML: true,
+      text: results.text
+    }, function (err, responseStatus) {
+      if (err) {
         return fn(err);
       }
-
-      // check for process environment.
-      // returns success message during testing.
-      if(process.env.NODE_ENV === 'test') {
-        return fn(null, '250 2.0.0 OK 1350452502 s5sm19782310obo.10', html, text);
-      }
-
-      var transport = defaultTransport;
-      transport.sendMail({
-        from: config.mailer.defaultFromAddress,
-        to: locals.email,
-        subject: locals.subject,
-        html: html,
-        // generateTextfromHTML: true
-        text: text
-      }, function(err, responseStatus) {
-        if(err) {
-          return fn(err);
-        }
-
-        return fn(null, responseStatus.message, html, text);
-      });
+      return fn(null, responseStatus.message, html, text);
     });
   });
 };
