@@ -32,11 +32,12 @@ module.exports = function(app, passport) {
   // USER ROUTES =========================================================
   app.route('/signup')
     .get(users.signup)
-    .post(passport.authenticate('local-signup', {
-    successRedirect: '/dashboard',
-    failureRedirect: '/login',
-    failureFlash : true
-      })
+    .post(users.create
+    //   passport.authenticate('local-signup', {
+    // successRedirect: '/dashboard',
+    // failureRedirect: '/login',
+    // failureFlash : true
+    //   })
     );
 
   // login

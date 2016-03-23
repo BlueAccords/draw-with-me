@@ -11,10 +11,17 @@ var bodyParser = require('body-parser');
 var nunjucks = require('nunjucks');
 var session = require('express-session');
 
+require('dotenv').config({path: './config/.env'});
+
+
 // db connection
 var configDB = require('./config/database');
-mongoose.connect(configDB.db.test);
-
+mongoose.connect(process.env.db_development);
+db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+    console.log('db is connected to mongodb')
+});
 // routes
 //var users = require('./routes/users');
 //var photos = require('./routes/photos');

@@ -3,8 +3,8 @@
 module.exports = {
   mailer: {
     auth: {
-      user: 'mymail@example.com',
-      password: 'secret',
+      user: 'mesaslinger',
+      pass: process.env.PW,
     },
     defaultFromAddress: 'Blue Accords <draw-with-me@example.com',
   }

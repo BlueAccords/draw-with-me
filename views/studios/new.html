@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<form action="/studios/new" method="post">
+  <label for="name">Studio Name</label>
+  <input id="name" type="text" name="name", required=true>
+  <br>
+  <label for="description">Description</label>
+  <input id="description" type="textarea" name="description", required=true>
+  <br>
+  <!-- <label for="password">Password</label>
+  <input type="password" id="password" name="password", required="true"> -->
+  <br>
+  <input type="submit" value="Submit">
+</form>
+{% endblock %}

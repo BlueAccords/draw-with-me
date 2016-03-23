@@ -10,7 +10,7 @@ var EmailAddressRequiredError = new Error('email address required');
 
 // create a defaultTransport using gmail and authentication that are
 // stored in the `config.js` file.
-var defaultTransport = nodemailer.createTransport('SMTP', {
+var defaultTransport = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
     user: config.mailer.auth.user,
@@ -31,26 +31,48 @@ exports.sendOne = function(templateName, locals, fn) {
 
   var template = new EmailTemplate(path.join(templatesDir, templateName));
 
-  template.render(locals, function(err, results) {
-    console.log(err);
-    if(err) {
-      return fn(err);
-    }
-
-    var transport = defaultTransport;
-
-    transport.sendMail({
-      from: config.mailer.defaultFromAddress,
-      to: locals.email,
-      subject: locals.subject,
-      html: results.html,
-      // generateTextFromHTML: true,
-      text: results.text
-    }, function (err, responseStatus) {
-      if (err) {
-        return fn(err);
-      }
-      return fn(null, responseStatus.message, html, text);
-    });
+  var sendMailer = defaultTransport.templateSender(template, {
+    from: config.mailer.defaultFromAddress,
+    // to: locals.email,
+    // subject: locals.subject,
+    // html: results.html,
+    // // generateTextFromHTML: true,
+    // text: results.text
   });
+  
+  sendMailer({
+    to: locals.email,
+    subject: locals.subject,
+    // apparently templateSender auto renders the html/text
+  }, {
+    username: 'mesaslinger@gmail.com',
+    password: process.env.PW,
+  }, function(err, info) {
+    if(err) return fn(err);
+
+    return fn(null, info);
+  });
+
+
+  // template.render(locals, function(err, results)
+  //   console.log(err);
+  //   if(err) {
+  //     return fn(err);
+  //   }
+
+
+    // transport.sendMail({
+    //   from: config.mailer.defaultFromAddress,
+    //   to: locals.email,
+    //   subject: locals.subject,
+    //   html: results.html,
+    //   // generateTextFromHTML: true,
+    //   text: results.text
+    // }, function (err, responseStatus) {
+    //   if (err) {
+    //     return fn(err);
+    //   }
+    //   return fn(null, responseStatus.message, html, text);
+    // });
+  // });
 };

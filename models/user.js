@@ -9,8 +9,6 @@ var userSchema = new Schema({
     username        : { type: String, unique: true, trim: true },
     email           : { type: String, unique: true, lowercase: true, trim: true },
     password        : String,
-    verification_token: { type: String},
-    token_date      : { type: Date, default: Date.now, expires: '1h' },
     verified        : { type: Boolean, default: false },
   },
   facebook          : {
@@ -36,6 +34,8 @@ var userSchema = new Schema({
     join_date: {type: Date, default: Date.now()}
   }],
 });
+
+// Helper Function
 
 // Validations
 
@@ -78,8 +78,6 @@ userSchema.statics = {
   // @param {Object} studio
   // @param {Function} cb
   joinStudio: function(studio, user, cb) {
-    console.log('Joining studio ... \n\n');
-
 
     //IDEA: Refactor this to use validator + async module.
     // STABLE ============================================

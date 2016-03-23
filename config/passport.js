@@ -28,7 +28,7 @@ module.exports = function(passport) {
   // scrubs user password then stores user Object as a cookie.
   passport.deserializeUser(function(id, done) {
     User.findById(id, function(err, user) {
-      user.local.passport = undefined;
+      user.local.password = undefined;
       done(err, user);
     });
   });
@@ -77,12 +77,6 @@ module.exports = function(passport) {
               throw err;
             }
 
-            // TODO: Refactor user sign up. abstract it outside of passport
-            var verifyToken = new VerifyToken({_userId: newUser._id});
-            verifyToken.generateVerificationToken(function(err, token) {
-              if(err) throw new Error(err);
-              
-            });
             // return user
             return done(null, newUser);
           });

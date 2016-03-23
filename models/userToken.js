@@ -11,6 +11,8 @@ var userTokenSchema = new Schema({
   expires_at: { type: Date, required: true, default: Date.now, expires: '1h'}
 });
 
+// individual methods(used by individiual entities)
+
 userTokenSchema.methods = {
   generateVerificationToken: function(done) {
     var thisToken = this;
@@ -27,5 +29,11 @@ userTokenSchema.methods = {
     // done();
   },
 };
+
+// static methods (Used by model itself)
+
+userTokenSchema.statics.methods = {
+
+}
 
 module.exports = mongoose.model('UserToken', userTokenSchema);

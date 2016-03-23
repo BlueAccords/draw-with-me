@@ -7,6 +7,54 @@ var VerifyToken = mongoose.model('UserToken');
 
 // create User
 // IDEA: refactor create user to get it out of passport local strategy.
+exports.create = function(req, res) {
+  var critera = {$or: [{'local.username' : req.body.username},
+                          {'local.email'    : req.body.email
+                        }]};
+
+  User.findOne(critera, function(err, user) {
+        // checks for and returns any errors
+        if(err) {
+          console.log(err);
+          res.render('signup', {
+            message: req.flash(err)
+          });
+          // return done(err);
+        }
+
+        // check to see if email/username is taken.
+        if(user) {
+          console.log('error user/email already taken');
+          res.render('signup', {
+            message: req.flash('That Email/Username is already taken'),
+          });
+
+          // return done(null, false, req.flash('signupMessage'),
+          //             'That Email/Username is already taken');
+        } else {
+          var newUser = new User();
+
+          // setup User credientials and save to db.
+          newUser.local.username = req.body.username;
+          newUser.local.email    = req.body.email;
+          newUser.local.password = newUser.generateHash(req.body.password);
+
+          // save user to db
+          newUser.save(function(err) {
+            if(err) {
+              console.log('error in db creation')
+              res.render('signup', {
+                message: req.flash(err)
+              });
+            }
+
+            // return user
+           res.redirect('/dashboard');
+          });
+        }
+
+    }); 
+}
 
 // show dashboard/user profile
 exports.show = function(req, res) {
@@ -43,6 +91,7 @@ exports.join = function(req, res) {
   var user = req.user;
 
   // FIXME: refactor this to use the static method instead of the user specific method.
+  // TODO: make it so a user can join or leave a studio by clicking the same button
   User.joinStudio(studio, user, function(err) {
     if(err) {
       req.flash('error', 'You are already a member of this studio!');
@@ -73,3 +122,4 @@ exports.verifyUser = function(req, res, next) {
     });
   });
 };
+

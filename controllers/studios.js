@@ -61,6 +61,7 @@ exports.index = function(req, res) {
 exports.new = function(req, res) {
   res.render('studios/new', {
     title: 'New Studio',
+    // TODO: new studio method
     studio: new Studio({})
   });
 };
@@ -70,13 +71,13 @@ exports.new = function(req, res) {
 // TODO: slugify studio names(possibly store in separate field)
 // and redirect to the slugified field
 exports.create = function(req, res) {
-  var images = req.files.image ?
-    [req.files.image] : undefined;
+  // var images = req.files.image !== undefined ?
+  //   [req.files.image] : undefined;
   // req.body is the form submitted information.
   var studio = new Studio(req.body);
   // FIXME: session data may be stored else where atm.
   studio.owner = req.user;
-  studio.createAndSave(images, function(err) {
+  studio.createAndSave(function(err) {
     if(!err) {
       req.flash('success', 'Successfully created studio!');
       return res.redirect('/studios/'+studio._id);

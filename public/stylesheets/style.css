@@ -6,3 +6,12 @@ body {
 a {
   color: #00B7FF;
 }
+
+nav ul{
+  list-style: none;
+  padding: 0;
+}
+
+nav li {
+  display: inline-block;
+}

@@ -52,7 +52,7 @@ studioSchema.methods = {
   // TODO: add image uploading capability to the studio creation process.
   // TODO: automatically create a default collection upon studio creation.
   // @param images {Object} is currently not used.
-  createAndSave: function(images, cb) {
+  createAndSave: function(cb) {
     var self = this;
 
     this.validate(function(err) {

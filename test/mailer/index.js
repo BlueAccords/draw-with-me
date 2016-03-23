@@ -6,7 +6,7 @@ should = chai.should();
 var utils = require('../utils');
 var mailer = require('../../mailer/index');
 
-describe.only('mailer: models', function () {
+describe('mailer: models', function () {
 
 
   describe('#sendOne()', function (done) {

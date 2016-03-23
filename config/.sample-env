@@ -1,0 +1,3 @@
+db_production  = 'mongodb://localhost/production-db'
+db_development = 'mongodb://localhost/dev-db'
+db_test        = 'mongodb://localhost/test-db'
